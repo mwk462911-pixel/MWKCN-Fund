@@ -5,7 +5,7 @@
  */
 const CONFIG = {
     // 1. นำ URL ของ Google Apps Script Web App มาวางที่นี่
-    API_URL: 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL',
+    API_URL: 'https://script.google.com/macros/s/AKfycbypqNNQf4-HBcetryp5Gubjq556LuxzYSM_aokjRI-ks9s-sDF2gDONO8mAe6pQg6ey/exec',
     
     // 2. ข้อมูล PromptPay (เบอร์โทรศัพท์)
     PROMPTPAY_ID: "0908870278",
