@@ -1,7 +1,7 @@
 
 // --- GitHub Pages API Setup ---
 // วาง URL ของ Google Apps Script Web App ที่คุณ Deploy ใหม่ที่นี่
-const API_URL = 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL';
+const API_URL = 'https://script.google.com/macros/s/AKfycbypqNNQf4-HBcetryp5Gubjq556LuxzYSM_aokjRI-ks9s-sDF2gDONO8mAe6pQg6ey/exec';
 
 async function callApi(action, params = {}) {
   const url = new URL(API_URL);
