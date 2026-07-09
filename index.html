@@ -1,16 +1,2779 @@
-
 <!DOCTYPE html>
+
+
 <html lang="th">
+
+
 <head>
+
+
+<base target="_top">
+
+
+<meta charset="UTF-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<title>MWKCN Class Fund Dashboard - Premium Expressive UI</title>
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+
+
+/* --- ส่วนของ Intro --- */
+
+
+#intro-overlay {
+
+
+position: fixed; inset: 0; z-index: 99999;
+
+
+background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+
+
+display: flex; flex-direction: column; justify-content: center; align-items: center;
+
+
+animation: fadeOut 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 2.5s;
+
+
+padding: 20px; text-align: center;
+
+
+}
+
+
+.intro-title {
+
+
+color: #fff; font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 900; letter-spacing: clamp(4px, 1vw, 8px);
+
+
+text-transform: uppercase; background: linear-gradient(135deg, #ffffff 30%, #888888 100%);
+
+
+-webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+
+animation: reveal 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+
+}
+
+
+.intro-subtitle {
+
+
+color: #8e8e93; margin-top: 15px; font-weight: 300; letter-spacing: 3px;
+
+
+font-size: clamp(0.9rem, 3vw, 1.2rem); opacity: 0; animation: fadeIn 1.2s ease forwards 0.6s;
+
+
+}
+
+
+@keyframes reveal { from { transform: translateY(40px) scale(0.95); opacity: 0; filter: blur(15px); } to { transform: translateY(0) scale(1); opacity: 1; filter: blur(0); } }
+
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- สไตล์ UI Liquid Glass & Apple Theme --- */
+
+
+:root {
+
+
+--liquid-glass-white: rgba(255, 255, 255, 0.45);
+
+
+--liquid-glass-border: rgba(255, 255, 255, 0.8);
+
+
+--glass-shadow: 0 30px 60px rgba(0, 0, 0, 0.05), 0 10px 20px rgba(0, 0, 0, 0.02);
+
+
+--inner-reflection: inset 0 2px 5px rgba(255, 255, 255, 0.7), inset 0 -1px 2px rgba(255, 255, 255, 0.1);
+
+
+ --accent: #007AFF;
+
+
+--fine-red: #ff3b30;
+
+
+--fine-green: #34C759;
+
+
+--bg-gradient: linear-gradient(180deg, #F2F2F7 0%, #E5E5EA 100%);
+
+
+--text-primary: #1C1C1E;
+
+
+}
+
+
+body {
+
+
+background: var(--bg-gradient);
+
+
+font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Sarabun", sans-serif;
+
+
+color: var(--text-primary);
+
+
+min-height: 100vh;
+
+
+padding-bottom: 100px;
+
+
+perspective: 2000px;
+
+
+-webkit-font-smoothing: antialiased;
+
+
+}
+
+
+.app-header { background: #000; color: white; padding: 50px 20px 45px; text-align: center; clip-path: ellipse(160% 100% at 50% 0%); margin-bottom: 25px; }
+
+
+.app-header h1 { font-weight: 900; letter-spacing: -0.5px; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.overview-card {
+
+
+background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.6) 100%);
+
+
+backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+
+
+border: 2px solid var(--liquid-glass-border); border-radius: 24px; padding: 20px; margin: 0 20px 25px;
+
+
+box-shadow: var(--glass-shadow), var(--inner-reflection); text-align: center;
+
+
+}
+
+
+.overview-card h5 { font-weight: 800; font-size: 1.1rem; color: #1C1C1E; margin-bottom: 4px; }
+
+
+.overview-badge {
+
+
+background: rgba(0, 122, 255, 0.08); color: var(--accent); font-weight: 700; padding: 6px 14px; border-radius: 12px; font-size: 0.8rem; display: inline-block; margin-top: 10px; border: 1px solid rgba(0, 122, 255, 0.15);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- โซน ค้นหาและกล่องแนะนำอัจฉริยะ --- */
+
+
+.search-section {
+
+
+background: var(--liquid-glass-white); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+
+
+border: 2px solid var(--liquid-glass-border); border-radius: 24px; padding: 22px; margin: 0 20px 25px;
+
+
+box-shadow: var(--glass-shadow), var(--inner-reflection); position: relative;
+
+
+}
+
+
+.search-container { position: relative; }
+
+
+.suggest-box {
+
+
+position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: rgba(255, 255, 255, 0.95);
+
+
+backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+
+
+border: 1px solid rgba(0,0,0,0.08); border-radius: 16px; max-height: 220px; overflow-y: auto;
+
+
+z-index: 1000; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: none; padding: 6px;
+
+
+}
+
+
+.suggest-item {
+
+
+padding: 10px 14px; cursor: pointer; border-radius: 10px; font-size: 0.9rem; font-weight: 500;
+
+
+display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;
+
+
+}
+
+
+.suggest-item:hover { background: rgba(0, 122, 255, 0.08); color: var(--accent); }
+
+
+.suggest-item .badge { background: rgba(0,0,0,0.05); color: #555; border-radius: 8px; font-weight: 600; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.form-select, .form-control {
+
+
+background: rgba(255, 255, 255, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.8) !important;
+
+
+color: #1C1C1E !important; border-radius: 14px; font-size: 0.95rem; transition: all 0.3s ease;
+
+
+}
+
+
+.form-select:focus, .form-control:focus {
+
+
+background: rgba(255, 255, 255, 0.8) !important; border-color: var(--accent) !important;
+
+
+box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.12) !important;
+
+
+}
+
+
+.btn-search {
+
+
+background: #000 !important; color: white !important; border-radius: 14px; font-weight: 600; font-size: 0.95rem; padding: 0 20px;
+
+
+border: none; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+
+}
+
+
+.btn-search.has-val { background: var(--accent) !important; animation: buttonPulse 2s infinite ease-in-out; }
+
+
+@keyframes buttonPulse { 0% { box-shadow: 0 0 0 0px rgba(0,122,255,0.4); } 70% { box-shadow: 0 0 0 8px rgba(0,122,255,0); } 100% { box-shadow: 0 0 0 0px rgba(0,122,255,0); } }
+
+
+/* --- การ์ดนักเรียน 3D --- */
+
+
+.student-card {
+
+
+background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.58) 100%);
+
+
+backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+
+
+border: 2px solid var(--liquid-glass-border); border-radius: 26px; padding: 25px; margin: 0 20px 20px;
+
+
+box-shadow: var(--glass-shadow), var(--inner-reflection); position: relative; overflow: hidden;
+
+
+transform-style: preserve-3d; opacity: 0; transform: translateY(40px) scale(0.96); filter: blur(5px);
+
+
+transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s, box-shadow 0.4s;
+
+
+}
+
+
+.student-card:hover { transform: scale(1.01) translateZ(10px); }
+
+
+.student-card::before {
+
+
+content: ""; position: absolute; inset: -50%;
+
+
+background: radial-gradient(circle at var(--light-x, 50%) var(--light-y, 50%), rgba(255, 255, 255, 0.5) 0%, transparent 60%);
+
+
+pointer-events: none; z-index: 1; mix-blend-mode: overlay;
+
+
+}
+
+
+.card-watermark {
+
+
+position: absolute; font-size: 5rem; font-weight: 900; color: rgba(0,0,0,0.03);
+
+
+bottom: -15px; right: -15px; z-index: 0; pointer-events: none; user-select: none;
+
+
+letter-spacing: -3px; transform: translateZ(-15px);
+
+
+}
+
+
+.student-card.show-animate { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+
+
+.student-card.pop-search-animation { animation: pop3DForward 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+
+@keyframes pop3DForward {
+
+
+0% { opacity: 0; transform: translateZ(-400px) translateY(50px) scale(0.8); filter: blur(10px); }
+
+
+100% { opacity: 1; transform: translateZ(0) translateY(0) scale(1); filter: blur(0); }
+
+
+}
+
+
+.student-card.fade-out-dynamic { opacity: 0; transform: scale(0.92) translateY(-20px); filter: blur(8px); transition: all 0.35s ease; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.student-card .card-title-name { font-size: 1.3rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; margin-top: 6px; margin-bottom: 14px; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.data-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 2px; border-bottom: 1px solid rgba(0,0,0,0.03); transition: all 0.25s; }
+
+
+.data-row:hover { background: rgba(255,255,255,0.3); border-radius: 10px; padding-left: 6px; padding-right: 6px; }
+
+
+.data-label { color: #8E8E93; font-size: 0.85rem; font-weight: 500; }
+
+
+.data-value { font-weight: 600; color: var(--text-primary); font-size: 0.95rem; }
+
+
+.money-value { font-family: "SF Mono", Menlo, monospace; font-weight: 700; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* กรอบสถานะ */
+
+
+.last-row-warning { margin-top: 15px !important; padding: 14px 16px !important; background: linear-gradient(135deg, rgba(255, 59, 48, 0.08) 0%, rgba(255, 59, 48, 0.02) 100%); border: 1px solid rgba(255, 59, 48, 0.2) !important; border-radius: 16px; position: relative; }
+
+
+.last-row-warning::before { content: ""; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(90deg, transparent, rgba(255,59,48,0.3), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: neonGlowMove 3s linear infinite; background-size: 200% 100%; }
+
+
+.last-row-warning .data-label { font-weight: 700; color: var(--fine-red); }
+
+
+.last-row-warning .data-value { font-family: "SF Mono", monospace; font-weight: 800; color: var(--fine-red); font-size: 1.3rem; }
+
+
+.last-row-success { margin-top: 15px !important; padding: 14px 16px !important; background: linear-gradient(135deg, rgba(52, 199, 89, 0.08) 0%, rgba(52, 199, 89, 0.02) 100%); border: 1px solid rgba(52, 199, 89, 0.2) !important; border-radius: 16px; position: relative; }
+
+
+.last-row-success::before { content: ""; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(90deg, transparent, rgba(52,199,89,0.3), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: neonGlowMove 3s linear infinite; background-size: 200% 100%; }
+
+
+.last-row-success .data-label { font-weight: 700; color: var(--fine-green); }
+
+
+.last-row-success .data-value { font-family: "SF Mono", monospace; font-weight: 800; color: var(--fine-green); font-size: 1.3rem; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@keyframes neonGlowMove { 0% { background-position: 0% 0%; } 100% { background-position: 200% 0%; } }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.badge-no { background: linear-gradient(135deg, #007AFF 0%, #0056b3 100%); color: white; padding: 4px 12px; border-radius: 20px; font-weight: 700; box-shadow: 0 4px 10px rgba(0, 122, 255, 0.15); display: inline-block; font-size: 0.8rem; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ระบบปุ่มการจัดการด้านล่างของการ์ด */
+
+
+.card-actions-area { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+
+
+.action-split-row { display: flex; gap: 8px; width: 100%; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ปุ่มออกเอกสารสไตล์ Apple Premium */
+
+
+.btn-doc-premium { flex: 1; background: #fff; border: 1.5px solid rgba(0,0,0,0.05); padding: 11px; border-radius: 14px; font-weight: 700; font-size: 0.85rem; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+
+
+.btn-doc-premium.type-receipt { color: var(--fine-green); border-color: rgba(52, 199, 89, 0.25); background: linear-gradient(180deg, #ffffff 0%, #f6fff8 100%); }
+
+
+.btn-doc-premium.type-receipt:hover { background: var(--fine-green); color: white; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(52, 199, 89, 0.2); }
+
+
+.btn-doc-premium.type-invoice { color: var(--fine-red); border-color: rgba(255, 59, 48, 0.25); background: linear-gradient(180deg, #ffffff 0%, #fff5f5 100%); }
+
+
+.btn-doc-premium.type-invoice:hover { background: var(--fine-red); color: white; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255, 59, 48, 0.2); }
+
+
+/* ปุ่มจ่ายเงินคิวอาร์ */
+
+
+.btn-pay-qr { flex: 1; background: #001f3f; color: #fff; border: none; padding: 11px; border-radius: 14px; font-weight: 700; font-size: 0.85rem; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.25s ease; }
+
+
+.btn-pay-qr:hover { background: #003366; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 31, 63, 0.2); }
+
+
+/* ส่วนกล่อง QR และข้อความแจ้งเตือน */
+
+
+.qr-container { display: none; text-align: center; margin-top: 12px; padding: 18px; background: #fff; border-radius: 18px; border: 1px dashed #cbd5e1; animation: fadeIn 0.4s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+
+
+.qr-container img { max-width: 170px; height: auto; border-radius: 10px; }
+
+
+.slip-notice-box { background: rgba(0, 122, 255, 0.05); color: #0056b3; font-size: 0.85rem; font-weight: 700; padding: 12px; border-radius: 12px; border: 1px dashed rgba(0, 122, 255, 0.25); margin-top: 14px; text-align: center; }
+
+
+.btn-send-slip { width: 100%; background: #25D366; color: white; border: none; padding: 8px 14px; border-radius: 10px; font-size: 0.8rem; font-weight: 700; margin-top: 10px; display: inline-flex; justify-content: center; align-items: center; gap: 6px; text-decoration: none; transition: all 0.2s; }
+
+
+.btn-send-slip:hover { background: #128C7E; color: white; transform: translateY(-1px); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#loader { position: fixed; inset: 0; background: rgba(255,255,255,0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+
+
+.loader-glass-box { background: rgba(255, 255, 255, 0.75); padding: 35px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 30px 60px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; }
+
+
+.neon-spinner { position: relative; width: 50px; height: 50px; margin-bottom: 20px; }
+
+
+.neon-spinner::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 3px solid transparent; border-top-color: var(--accent); animation: spinNeon 0.8s linear infinite; }
+
+
+@keyframes spinNeon { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+
+#loader-text { font-weight: 700; color: #1C1C1E; font-size: 1rem; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.gyro-control-wrapper { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; width: calc(100% - 40px); max-width: 560px; display: none; }
+
+
+.btn-gyro-lock { width: 100%; background: white; border: 1.5px solid var(--liquid-glass-border); border-radius: 18px; padding: 14px; color: #1C1C1E; font-weight: 700; font-size: 0.85rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; justify-content: center; align-items: center; gap: 8px; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.elegant-footer { text-align: center; margin-top: 50px; padding: 25px 20px; border-top: 1px solid rgba(0, 0, 0, 0.02); }
+
+
+.footer-brand { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 5px; color: #8E8E93; margin-bottom: 6px; }
+
+
+.footer-dev { font-size: 0.8rem; font-weight: 500; color: #A2A2A7; }
+
+
+.footer-dev span { font-weight: 700; color: #555559; }
+
+
+.heart-pulse { inline-block; color: var(--fine-red); animation: heartBeat 1.4s infinite ease-in-out; margin: 0 3px; }
+
+
+@keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+
+.empty-state { text-align: center; padding: 40px 20px; color: #8e8e93; font-weight: 500; font-size: 0.95rem; }
+
+
+
+
+/* --- Admin Link Button --- */
+.admin-link-btn {
+ position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+ width: 60px; height: 60px; background: #000; color: #fff;
+ border-radius: 50%; display: flex; justify-content: center; align-items: center;
+ box-shadow: 0 15px 35px rgba(0,0,0,0.3); cursor: pointer; transition: all 0.4s;
+ border: 2px solid rgba(255,255,255,0.1); text-decoration: none;
+}
+.admin-link-btn:hover { transform: scale(1.1) rotate(15deg); background: #007AFF; color: #fff; }
+.violation-status-label {
+ background: linear-gradient(135deg, #FF9500 0%, #E58600 100%);
+ color: white; padding: 14px; border-radius: 20px; text-align: center;
+ margin-top: 15px; font-weight: 800; font-size: 0.95rem;
+ box-shadow: 0 8px 20px rgba(255, 149, 0, 0.25);
+}
+.violation-status-label.danger {
+ background: linear-gradient(135deg, #FF3B30 0%, #C93429 100%);
+ box-shadow: 0 8px 20px rgba(255, 59, 48, 0.25);
+}
+.cash-status-label {
+ background: linear-gradient(135deg, #34C759 0%, #248A3D 100%);
+ color: white; padding: 14px; border-radius: 20px; text-align: center;
+ margin-top: 15px; font-weight: 800; font-size: 0.95rem;
+ box-shadow: 0 8px 20px rgba(52, 199, 89, 0.25);
+}
+
+
+/* ==========================
+iOS26 Liquid Countdown
+========================== */
+
+
+.countdown-liquid{
+   margin:20px;
+   padding:18px;
+
+
+   backdrop-filter:blur(35px);
+   -webkit-backdrop-filter:blur(35px);
+
+
+   background:
+   rgba(255,255,255,.35);
+
+
+   border:1px solid rgba(255,255,255,.5);
+
+
+   border-radius:28px;
+
+
+   box-shadow:
+   0 10px 40px rgba(0,0,0,.08);
+}
+
+
+.countdown-title{
+   font-weight:800;
+   margin-bottom:10px;
+}
+
+
+.countdown-value{
+   font-size:1.4rem;
+   font-weight:900;
+}
+</style>
+
+
+</head>
+
+
+<body>
+<!-- ปุ่มลิงก์ไปหน้าแอดมินใหม่ -->
+<a id="adminLink" href="#" class="admin-link-btn">
+ <i class="fa-solid fa-user-gear fa-xl"></i>
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="intro-overlay">
+
+
+<div class="intro-title">MWKCN</div>
+
+
+<div class="intro-subtitle">CLASS FUND SYSTEM</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="loader" style="display:none;">
+
+
+<div class="loader-glass-box">
+
+
+<div class="neon-spinner"></div>
+
+
+<div id="loader-text">กำลังเริ่มต้นระบบ...</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="gyro-control-wrapper" id="gyroWrapper">
+
+
+<button class="btn-gyro-lock" id="gyroButton" onclick="requestGyroPermission()">
+
+
+<i class="fa-solid fa-wand-magic-sparkles"></i> คลิกเพื่อเปิดเอฟเฟกต์การ์ดเอียง 3D (สำหรับ iPhone)
+
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="app-header">
+
+
+ <div class="countdown-liquid">
+
+
+   <div class="countdown-title">
+       ⏳ เวลาที่เหลือก่อนโดนปรับ
+   </div>
+
+
+   <div class="countdown-island">
+
+
+ <span class="pulse-dot"></span>
+
+
+ <span id="countdownBox">
+     กำลังโหลด...
+ </span>
+
+
+</div>
+
+
+<script>
+
+
+function updateCountdown(){
+
+
+ google.script.run
+   .withSuccessHandler(function(deadline){
+
+
+     setInterval(function(){
+
+
+       const diff = deadline - Date.now();
+
+
+       const d = Math.floor(diff / 86400000);
+       const h = Math.floor(diff / 3600000) % 24;
+       const m = Math.floor(diff / 60000) % 60;
+       const s = Math.floor(diff / 1000) % 60;
+
+
+       document.getElementById("countdownBox")
+         .innerHTML =
+         `${d} วัน ${h} ชม ${m} นาที ${s} วิ`;
+
+
+     },1000);
+
+
+   })
+   .getPaymentDeadline();
+
+
+}
+
+
+window.addEventListener("load", function(){
+ updateCountdown();
+});
+
+
+</script>
+</div>
+
+
+
+
+<h1>MWKCN</h1>
+
+
+<p class="text-white-50 m-0" style="font-size: 0.85rem; letter-spacing: 4px;">CLASS FUND DASHBOARD</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid" style="max-width: 600px; padding: 0;">
+
+
+<div class="overview-card">
+
+
+<h5>ยินดีต้อนรับสู่ระบบบัญชีห้อง ✨</h5>
+
+
+<div class="overview-badge" id="updateBadge"><i class="fa-regular fa-clock me-1"></i> ดึงข้อมูลความปลอดภัยเรียลไทม์...</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="search-section">
+
+
+<select id="sheetSelect" class="form-select form-select-lg mb-3" onchange="loadData()"></select>
+
+
+ <div class="search-container">
+
+
+  <div class="input-group input-group-lg">
+
+
+    <input type="text" id="searchId" class="form-control" placeholder="พิมพ์เลขที่ หรือ ชื่อนักเรียนเพื่อดูข้อมูล..." oninput="handleSearchInput(this)">
+
+
+    <button id="searchBtn" class="btn btn-search" onclick="applySearch()">ค้นหา</button>
+
+
+  </div>
+
+
+  <div id="suggestBox" class="suggest-box"></div>
+
+
+</div>
+
+
+ <div class="text-center mt-3"><button class="btn btn-link text-muted text-decoration-none btn-sm" onclick="showAllCards()">แสดงรายชื่อทั้งหมด</button></div>
+
+
+</div>
+
+
+<div id="cardContainer">
+
+
+<div class="empty-state">
+
+
+  <i class="fa-solid fa-magnifying-glass mb-2" style="font-size: 1.5rem;"></i><br>
+
+
+  พิมพ์เลขที่ของคุณด้านบน เพื่อตรวจสอบยอดเงินค้างชำระ
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<footer class="elegant-footer">
+
+
+<div class="footer-brand">M W K C N &nbsp; C L A S S &nbsp; F U N D</div>
+
+
+<div class="footer-dev">
+
+
+Designed with <span class="heart-pulse">🤍</span> by <span>SUPHAKIT SAEHOO</span>
+
+
+</div>
+
+
+<div class="version-tag">Version 4.4.48</div>
+
+
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+const PROMPTPAY_ID = "0908870278";
+
+
+const REPORT_SLIP_LINK = "https://lin.ee/w6UjWRo/~732gwoku";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const nameMasterList = { 
+  "1": "นายอินทัช ฐิติโชติตระกูล", 
+  "2": "น.ส.พัชลา บุญเลิศทรัพย์ทวี", 
+  "3": "นายคุณานนท์ สามัคคีก่อสกุล", 
+  "4": "นายชินกฤต โยธิยา", 
+  "5": "น.ส.จิตรา จือเต๊าะ", 
+  "6": "น.ส.นฤมล เยอะเบียง", 
+  "7": "น.ส.ปานตะวัน เพียงคำ", 
+  "8": "น.ส.ฐิตาพร มาเยอะ", 
+  "9": "น.ส.โนรา โหว่ยคือ", 
+  "10": "น.ส.มยุรี มาเยอะ", 
+  "11": "น.ส.ณัชชา หมื่อแล", 
+  "12": "น.ส.อพิญญา ศรีวิชัย", 
+  "13": "นายอนุรักษ์ แซ่ว่าง", 
+  "14": "น.ส.ดวงกมล มั่นคง", 
+  "15": "น.ส.มรกต ซางสุภาพ", 
+  "16": "น.ส.ติยนันท์ ฦาชา", 
+  "17": "น.ส.กนกภรณ์ โสภณสุนทรเลิศ", 
+  "18": "น.ส.ณนิดา แซ่เติ๋ง", 
+  "19": "นายวิโรจน์ เยอแจะ", 
+  "20": "น.ส.ทองดี เรือนเเก้ว", 
+  "21": "นายทักษ์ดนัย โชคชัยรัตนกุล", 
+  "22": "นวพล สว่างถาวรกุล", 
+  "23": "นายรัชชานนท์ เหวยเหยอกู่", 
+  "24": "นายศุภกิจ แซ่หู่", 
+  "25": "น.ส.กชกร เหลาเหยา", 
+  "26": "น.ส.กัญญาพร อามอ", 
+  "27": "น.ส.ณิชากร อายี", 
+  "28": "น.ส.ธิดารัตน์ ละเชกุ", 
+  "29": "น.ส.นาธาร์ แลเชอ", 
+  "30": "น.ส.เนาวรัตน์ เชอหมื่อ", 
+  "31": "น.ส.เพชรรดา สีไอ้", 
+  "32": "น.ส.ภัคจีรา แซ่เห่อ", 
+  "33": "น.ส.สุปวีณ์ ขันอุละ", 
+  "34": "น.ส.ภัทรมล สหพรสันติสุข", 
+  "35": "น.ส.ธัญญลักษณ์ ทาเกิด", 
+  "36": "น.ส.วราภรณ์ เชอกอง", 
+  "37": "น.ส.ณัชนันท์ คำปวน", 
+  "38": "น.ส.กนกรดา มูเซอ", 
+  "39": "น.ส.นิชดา อาซอ",
+  "40": "นายสุรเชษฐ์ กัลยา"  
+};
+
+
+let fullData = []; let columnsToShow = [];
+
+
+let loaderInterval;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function startLoaderAnimation() {
+
+
+const messages = ["กำลังดาวน์โหลดข้อมูล..."];
+
+
+let index = 0; document.getElementById('loader-text').innerText = messages[0]; document.getElementById('loader').style.display = 'flex';
+
+
+loaderInterval = setInterval(() => { index = (index + 1) % messages.length; document.getElementById('loader-text').innerText = messages[index]; }, 800);
+
+
+}
+
+
+function stopLoaderAnimation() { clearInterval(loaderInterval); document.getElementById('loader').style.display = 'none'; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function loadData() {
+
+
+const loader = document.getElementById('loader');
+
+
+if (loader) loader.style.display = 'flex';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ระบบปลดล็อกนิรภัย: บังคับปิดโหลดใน 6 วินาที ป้องกันหน้าจอค้างกดไม่ได้
+
+
+const safetyTimeout = setTimeout(() => {
+
+
+if (loader) loader.style.display = 'none';
+
+
+}, 6000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+google.script.run
+.withSuccessHandler(data => {
+  clearTimeout(safetyTimeout); // ปิดระบบนิรภัยเมื่อโหลดเสร็จ
+  if (loader) loader.style.display = 'none';
+   if (data && data.length > 0) {
+    fullData = data;
+    processColumns(data[0]);
+    document.getElementById('updateBadge').innerText = `ซิงค์ล่าสุด: ${new Date().toLocaleTimeString('th-TH')} น.`;
+    
+    // โหลดข้อมูลความผิดก่อน render
+    google.script.run.withSuccessHandler(vData => {
+      allViolationsData = vData;
+      const currentSheet = document.getElementById('sheetSelect').value;
+      const autoShowSheets = ["ค่าห้องและปรับเงิน", "รวม"];
+      if (autoShowSheets.includes(currentSheet)) {
+        renderCards(data, false);
+      } else {
+        resetSearch();
+      }
+    }).getRuleViolations();
+    return;
+
+
+
+
+
+
+
+
+
+
+        // การแสดงผลย้ายไปทำหลังจากโหลดข้อมูลความผิดเสร็จแล้วด้านบน
+
+
+  }
+
+
+})
+
+
+.withFailureHandler(err => {
+
+
+  clearTimeout(safetyTimeout);
+
+
+  if (loader) loader.style.display = 'none';
+
+
+  alert("เกิดข้อผิดพลาด: " + err);
+
+
+})
+
+
+.getSheetData(document.getElementById('sheetSelect').value);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function processColumns(headers) { columnsToShow = []; headers.forEach((h, i) => { if (h.trim() !== "") columnsToShow.push(i); }); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function handleSearchInput(input) {
+
+
+let val = input.value.trim().toLowerCase();
+
+
+const btn = document.getElementById('searchBtn');
+
+
+const suggestBox = document.getElementById('suggestBox');
+
+
+if (val !== "") { btn.classList.add('has-val'); } else { btn.classList.remove('has-val'); suggestBox.style.display = 'none'; return; }
+
+
+let matches = [];
+
+
+for (let id in nameMasterList) {
+
+
+let name = nameMasterList[id];
+
+
+if (id.startsWith(val) || name.toLowerCase().includes(val)) {
+
+
+  matches.push({ id: id, name: name });
+
+
+}
+
+
+}
+
+
+if(matches.length > 0) {
+
+
+suggestBox.innerHTML = matches.map(m => `
+
+
+  <div class="suggest-item" onclick="selectSuggestion('${m.id}')">
+
+
+    <span>${m.name}</span>
+
+
+    <span class="badge">เลขที่ ${m.id}</span>
+
+
+  </div>
+
+
+`).join('');
+
+
+suggestBox.style.display = 'block';
+
+
+} else {
+
+
+suggestBox.style.display = 'none';
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function selectSuggestion(id) {
+
+
+document.getElementById('searchId').value = id;
+
+
+document.getElementById('suggestBox').style.display = 'none';
+
+
+applySearch();
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function renderCards(rows, isSearch = false) {
+
+
+let container = document.getElementById('cardContainer');
+
+
+container.innerHTML = "";
+
+
+if(rows.length <= 1) {
+
+
+container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-circle-exclamation mb-2"></i><br>ไม่พบข้อมูลของนักเรียนคนนี้</div>`;
+
+
+return;
+
+
+}
+
+
+let cardCount = 0;
+
+
+let activeSheetName = document.getElementById('sheetSelect').value || "ห้องเรียน";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ for (let i = 1; i < rows.length; i++) {
+   let row = rows[i]; if (row.join("").trim() === "") continue;
+   cardCount++;
+   let card = document.createElement('div');
+   card.id = "card-index-" + i;
+   card.className = isSearch ? "student-card pop-search-animation" : "student-card";
+   let studentNo = row[0].toString().trim();
+   let studentName = (row[2] || "") + (row[3] || "") + " " + (row[4] || "");
+   if(!row[3]) studentName = nameMasterList[studentNo] || "ไม่ทราบชื่อ";
+   let cardHtmlInner = "";
+   let studentNameHtml = "";
+   let codableDebtAmount = 0;
+   let isPaidComplete = false;
+  
+   let studentViolationCount = 0;
+   if (allViolationsData && allViolationsData.length > 0) {
+     const filtered = allViolationsData.filter(v => v.id.toString() === studentNo);
+     filtered.forEach(v => studentViolationCount += parseInt(v.count));
+   }
+
+   columnsToShow.forEach((colIdx, order) => {
+
+
+  let label = rows[0][colIdx].trim();
+
+
+  let value = row[colIdx] != null ? row[colIdx].toString().trim() : "-";
+
+
+  let isLast = (order === columnsToShow.length - 1);
+
+
+   if (order === 0) {
+
+
+    cardHtmlInner += `<div class="mb-2" style="padding-right: 10px;"><span class="badge-no">เลขที่: ${value}</span></div>`;
+
+
+  } else {
+
+
+    if (label.includes("ชื่อ")) {
+
+
+      value = nameMasterList[row[0].toString().trim()] || value;
+
+
+      studentName = value;
+
+
+      studentNameHtml = `<div class="card-title-name">${value}</div>`;
+
+
+      return;
+
+
+    }
+
+
+
+
+    let isMoney = /^[0-9,.-]+$/.test(value) || label.includes("เงิน") || label.includes("ยอด") || label.includes("บาท");
+
+
+    let valueClass = isMoney ? "data-value money-value" : "data-value";
+
+
+
+
+    if (isLast) {
+
+
+      let cleanValue = value.replace(/,/g, '').trim();
+
+
+      let parsedValue = parseFloat(cleanValue);
+
+
+      if (cleanValue === "0" || cleanValue === "0.00" || cleanValue === "-" || cleanValue === "จ่ายแล้ว" || cleanValue === "ครบแล้ว" || parsedValue === 0) {
+
+
+        isPaidComplete = true;
+
+
+      } else if (!isNaN(parsedValue) && parsedValue > 0) {
+
+
+        codableDebtAmount = parsedValue;
+
+
+      }
+
+
+      let highlightClass = isPaidComplete ? "last-row-success" : "last-row-warning";
+
+
+      cardHtmlInner += `<div class="data-row ${highlightClass}"><span class="data-label">${label}</span><span class="${valueClass}">${value}</span></div>`;
+
+
+    } else {
+
+
+      cardHtmlInner += `<div class="data-row"><span class="data-label">${label}</span><span class="${valueClass}">${value}</span></div>`;
+
+
+    }
+
+
+  }
+
+
+});
+
+
+ // เอาปุ่มแชร์ขวาบนออกแล้ว เหลือเฉพาะตัว Watermark ลายน้ำพรีเมียม
+
+
+let finalHtml = `<div class="card-watermark">MWKCN</div>`;
+
+
+let insertIndex = cardHtmlInner.indexOf('</div>') + 6;
+
+
+cardHtmlInner = cardHtmlInner.slice(0, insertIndex) + studentNameHtml + cardHtmlInner.slice(insertIndex);
+
+
+ // โซนปุ่มเอกสาร/จ่ายเงิน ด้านล่างการ์ด
+
+
+cardHtmlInner += `<div class="card-actions-area">`;
+
+
+    let isCashPaid = cashPaidIds[studentNo];
+   if (isPaidComplete || isCashPaid) {
+     let cashLabel = isCashPaid ? '<div class="cash-status-label mb-2"><i class="fa-solid fa-check-circle me-2"></i>ชำระเงินสดเรียบร้อยแล้ว</div>' : '';
+     cardHtmlInner += cashLabel;
+   }
+   
+   if (studentViolationCount > 0) {
+     let isDanger = studentViolationCount >= 5;
+     let violationClass = isDanger ? 'violation-status-label danger' : 'violation-status-label';
+     let violationIcon = isDanger ? 'fa-triangle-exclamation' : 'fa-circle-exclamation';
+     cardHtmlInner += `<div class="${violationClass} mb-2"><i class="fa-solid ${violationIcon} me-2"></i>ทำผิดกฎรวม: ${studentViolationCount} ครั้ง</div>`;
+   }
+  
+   if (isPaidComplete || isCashPaid) {
+
+
+  // ชำระเงินครบถ้วน -> ออกใบเสร็จรับเงินสีเขียวพรีเมียม พร้อมปุ่มส่ง LINE
+
+
+  cardHtmlInner += `
+
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+
+
+      <button class="btn-doc-premium type-receipt" onclick="generateDocument('${studentName}', '${studentNo}', '${activeSheetName}', 0, 'RECEIPT')">
+
+
+        <i class="fa-solid fa-receipt"></i> ออกใบเสร็จดิจิทัล (Paid)
+
+
+      </button>
+
+
+    
+
+
+      <a href="${REPORT_SLIP_LINK}" target="_blank" class="btn-send-slip" style="margin-top: 0;">
+
+
+        <i class="fa-brands fa-line"></i> ส่งใบเสร็จให้เหรัญญิกทาง LINE
+
+
+      </a>
+
+
+    </div>
+
+
+  `;
+
+
+} else {
+
+
+  // ยังชำระไม่ครบ -> ออกแถวคู่: ปุ่มทวงหนี้สีแดง และปุ่มสแกนคิวอาร์เดิม
+
+
+  cardHtmlInner += `
+
+
+    <div class="action-split-row">
+
+
+      <button class="btn-doc-premium type-invoice" onclick="generateDocument('${studentName}', '${studentNo}', '${activeSheetName}', ${codableDebtAmount}, 'INVOICE')">
+
+
+        <i class="fa-solid fa-file-invoice-dollar"></i> ใบแจ้งหนี้ (ใบเตือน)
+
+
+      </button>
+
+
+      <button class="btn-pay-qr" onclick="toggleQrCode('${card.id}')">
+
+
+        <i class="fa-solid fa-qrcode"></i> สแกนจ่าย QR
+
+
+      </button>
+
+
+    </div>
+
+
+
+
+    <div class="qr-container" id="qr-box-${card.id}">
+
+
+      <p class="small text-muted mb-2">สแกนจ่ายผ่านแอปธนาคารยอด <b>${codableDebtAmount} บาท</b></p>
+
+
+      <img src="https://promptpay.io/${PROMPTPAY_ID}/${codableDebtAmount}.png" alt="PromptPay QR">
+
+
+    
+
+
+      <div class="mt-3 mb-2 text-center">
+
+
+        <a href="https://promptpay.io/${PROMPTPAY_ID}/${codableDebtAmount}.png" download="QR_${studentNo}_${codableDebtAmount}THB.png" target="_blank" class="btn-download-qr">
+
+
+          <i class="fa-solid fa-download"></i> บันทึก QR Code
+
+
+        </a>
+
+
+      </div>
+
+
+      <p class="small text-muted mt-2 mb-0"><i class="fa-solid fa-shield-halved"></i> ตรวจสอบชื่อบัญชีก่อนกดยืนยัน</p>
+
+
+      <div class="slip-notice-box">
+
+
+         <i class="fa-solid fa-triangle-exclamation text-danger"></i> <b>ทำธุรกรรมเสร็จเรียบร้อยแล้ว</b><br>
+
+
+         กรุณาส่งรูปภาพสลิปให้เหรัญญิกเพื่ออัปเดตระบบตาราง
+
+
+         <a href="${REPORT_SLIP_LINK}" target="_blank" class="btn-send-slip">
+
+
+           <i class="fa-brands fa-line"></i> กดเพื่อส่งสลิปให้เหรัญญิกที่นี่
+
+
+         </a>
+
+
+      </div>
+
+
+    </div>
+
+
+  `;
+
+
+}
+
+
+ cardHtmlInner += `</div>`; // ปิด Action Area
+
+
+ finalHtml += cardHtmlInner; card.innerHTML = finalHtml; container.appendChild(card);
+
+
+initParallaxTilt(card);
+
+
+ if (!isSearch) {
+
+
+  setTimeout(() => { card.classList.add('show-animate'); }, cardCount * 45);
+
+
+}
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function toggleQrCode(cardId) {
+
+
+const qrBox = document.getElementById(`qr-box-${cardId}`);
+
+
+qrBox.style.display = (qrBox.style.display === "block") ? "none" : "block";
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ฟังก์ชันแปลงและแสดงผลเอกสาร PDF/Print/Save Image Ready Window
+
+
+function generateDocument(name, no, sheetName, amount, type) {
+
+
+const isReceipt = (type === 'RECEIPT');
+
+
+const mainColor = isReceipt ? '#34C759' : '#ff3b30';
+
+
+const docTitle = isReceipt ? 'ใบเสร็จรับเงินอิเล็กทรอนิกส์' : 'ใบแจ้งหนี้ / ใบเตือนยอดค้างชำระ';
+
+
+const subTitle = isReceipt ? 'ELECTRONIC RECEIPT' : 'PAYMENT INVOICE & NOTICE';
+
+
+const statusText = isReceipt ? 'ชำระเงินเสร็จสิ้น (PAID COMPLETE)' : 'ค้างชำระ (PENDING PAYMENT)';
+
+
+const formattedDate = new Date().toLocaleDateString('th-TH', {
+
+
+  year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+
+
+}) + ' น.';
+
+
+ const docWindow = window.open('', '_blank', 'width=550,height=800');
+
+
+docWindow.document.write(`
+
+
+  <!DOCTYPE html>
+
+
+  <html>
+
+
+  <head>
+
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>MWKCN Class Fund Dashboard - Original Source</title>
-    
-    <!-- นำ CSS ทั้งหมดจากโค้ดต้นฉบับมาใส่ที่นี่ -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+
+    <title>${docTitle} - เลขที่ ${no}</title>
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <!-- เรียกใช้งาน html2canvas เพื่อใช้แปลง HTML เป็นรูปภาพ -->
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>
+
+
+  
+
+
+    <style>
+
+
+      body { font-family: 'Sarabun', sans-serif; background: #f4f4f7; color: #1c1c1e; padding: 30px 20px; margin: 0; display: flex; flex-direction: column; align-items: center; }
+
+
+      .receipt-box { background: #fff; width: 100%; max-width: 460px; border-radius: 24px; padding: 35px; box-shadow: 0 20px 40px rgba(0,0,0,0.06); border: 2px solid ${mainColor}; position: relative; box-sizing: border-box; }
+
+
+      .receipt-box::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 10px; background: ${mainColor}; border-radius: 22px 22px 0 0; }
+
+
+      .header { text-align: center; margin-bottom: 30px; border-bottom: 2px dashed #e5e5ea; padding-bottom: 20px; }
+
+
+      .header h1 { margin: 0; font-size: 1.6rem; font-weight: 800; color: #1c1c1e; }
+
+
+      .header p { margin: 4px 0 0; font-size: 0.8rem; font-weight: 700; color: #8e8e93; letter-spacing: 2px; }
+
+
+      .info-row { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 0.95rem; }
+
+
+      .info-label { color: #8e8e93; font-weight: 500; }
+
+
+      .info-value { color: #1c1c1e; font-weight: 700; text-align: right; }
+
+
+      .amount-container { background: ${isReceipt ? 'rgba(52, 199, 89, 0.06)' : 'rgba(255, 59, 48, 0.06)'}; border: 1px solid ${mainColor}40; border-radius: 16px; padding: 20px; text-align: center; margin: 25px 0; }
+
+
+      .amount-label { font-size: 0.85rem; font-weight: 700; color: ${mainColor}; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+
+
+      .amount-val { font-size: 2rem; font-weight: 800; color: ${mainColor}; margin: 0; }
+
+
+      .status-badge { display: inline-block; background: ${mainColor}; color: white; padding: 6px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; margin-top: 10px; box-shadow: 0 4px 10px ${mainColor}30; }
+
+
+      .footer-note { text-align: center; font-size: 0.75rem; color: #a2a2a7; margin-top: 30px; line-height: 1.4; border-top: 1px solid #f2f2f7; padding-top: 15px; }
+
+
     
+
+
+      .action-buttons { width: 100%; max-width: 460px; display: flex; gap: 10px; margin-top: 20px; }
+
+
+      .btn-action { flex: 1; border: none; padding: 14px; border-radius: 14px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+
+
+      .btn-print { background: #000; color: #fff; }
+
+
+      .btn-print:hover { background: #222; }
+
+
+      .btn-save-img { background: ${mainColor}; color: #fff; }
+
+
+      .btn-save-img:hover { opacity: 0.9; transform: translateY(-1px); }
+
+
+    
+
+
+      @media print { .action-buttons { display: none; } body { background: none; padding: 0; } .receipt-box { box-shadow: none; border: 2px solid ${mainColor}; } }
+
+
+   
+/* --- Admin Link Button --- */
+.admin-link-btn {
+ position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+ width: 60px; height: 60px; background: #000; color: #fff;
+ border-radius: 50%; display: flex; justify-content: center; align-items: center;
+ box-shadow: 0 15px 35px rgba(0,0,0,0.3); cursor: pointer; transition: all 0.4s;
+ border: 2px solid rgba(255,255,255,0.1); text-decoration: none;
+}
+.admin-link-btn:hover { transform: scale(1.1) rotate(15deg); background: #007AFF; color: #fff; }
+.violation-status-label {
+ background: linear-gradient(135deg, #FF9500 0%, #E58600 100%);
+ color: white; padding: 14px; border-radius: 20px; text-align: center;
+ margin-top: 15px; font-weight: 800; font-size: 0.95rem;
+ box-shadow: 0 8px 20px rgba(255, 149, 0, 0.25);
+}
+.violation-status-label.danger {
+ background: linear-gradient(135deg, #FF3B30 0%, #C93429 100%);
+ box-shadow: 0 8px 20px rgba(255, 59, 48, 0.25);
+}
+.cash-status-label {
+ background: linear-gradient(135deg, #34C759 0%, #248A3D 100%);
+ color: white; padding: 14px; border-radius: 20px; text-align: center;
+ margin-top: 15px; font-weight: 800; font-size: 0.95rem;
+ box-shadow: 0 8px 20px rgba(52, 199, 89, 0.25);
+}
+
+
+</style>
+
+
+  </head>
+
+
+  <body>
+<!-- ปุ่มลิงก์ไปหน้าแอดมินใหม่ -->
+<a id="adminLink" href="#" class="admin-link-btn">
+ <i class="fa-solid fa-user-gear fa-xl"></i>
+</a>
+
+
+
+
+    <div class="receipt-box" id="capture-target">
+
+
+      <div class="header">
+
+
+        <h1>${docTitle}</h1>
+
+
+        <p>${subTitle}</p>
+
+
+        <div class="status-badge">${statusText}</div>
+
+
+      </div>
+
+
+  
+
+
+      <div class="info-row"><span class="info-label">บัญชี</span><span class="info-value">กองทุนห้องเรียน MWKCN</span></div>
+
+
+      <div class="info-row"><span class="info-label">หมวดหมู่</span><span class="info-value">${sheetName}</span></div>
+
+
+      <div class="info-row"><span class="info-label">ชื่อ-นามสกุล</span><span class="info-value">${name}</span></div>
+
+
+      <div class="info-row"><span class="info-label">เลขที่</span><span class="info-value">เลขที่ ${no}</span></div>
+
+
+      <div class="info-row"><span class="info-label">วันที่ออกเอกสาร</span><span class="info-value">${formattedDate}</span></div>
+
+
+  
+
+
+      <div class="amount-container">
+
+
+        <div class="amount-label">${isReceipt ? 'จำนวนเงินที่ชำระแล้ว' : 'ยอดเงินคงค้างที่ต้องชำระ'}</div>
+
+
+        <div class="amount-val">${isReceipt ? 'ชำระครบถ้วน' : amount + ' บาท'}</div>
+
+
+      </div>
+
+
+  
+
+
+      <div class="footer-note">
+
+
+        เอกสารดิจิทัลฉบับนี้ออกโดยระบบอัตโนมัติ<br>
+
+
+        <b>MWKCN Class Fund System</b> • ข้อมูลซิงค์ความปลอดภัยคลาวด์แบบเรียลไทม์
+
+
+      </div>
+
+
+    </div>
+
+
+  
+
+
+    <div class="action-buttons">
+
+
+      <button class="btn-action btn-print" onclick="window.print()">
+
+
+        <i class="fa-solid fa-print"></i> พิมพ์ / PDF
+
+
+      </button>
+
+
+      <button class="btn-action btn-save-img" onclick="saveAsImage('${type}_เลขที่_${no}')">
+
+
+        <i class="fa-solid fa-image"></i> บันทึกเป็นรูปภาพ
+
+
+      </button>
+
+
+    </div>
+
+
+
+
+
+
+    <script>
+
+
+      function saveAsImage(filename) {
+
+
+        const target = document.getElementById('capture-target');
+
+
+        // ตั้งค่าสเกลเป็น 2 เพื่อเพิ่มความคมชัดของรูปภาพตัวอักษร
+
+
+        html2canvas(target, { scale: 2, useCORS: true }).then(canvas => {
+
+
+          const link = document.createElement('a');
+
+
+          link.download = filename + '.png';
+
+
+          link.href = canvas.toDataURL('image/png');
+
+
+          link.click();
+
+
+        }).catch(err => {
+
+
+          alert('ไม่สามารถบันทึกรูปภาพได้ กรุณาใช้การแคปหน้าจอแทน');
+
+
+        });
+
+
+      }
+
+
+    <\/script>
+
+
+  </body>
+
+
+  </html>
+
+
+`);
+
+
+docWindow.document.close();
+
+
+}
+
+
+
+
+
+
+
+
+
+
+function initParallaxTilt(card) {
+
+
+const maxTiltDegrees = 12;
+
+
+function handleMove(e) {
+
+
+card.classList.add('is-tilting');
+
+
+const rect = card.getBoundingClientRect();
+
+
+let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+
+let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+
+const x = clientX - rect.left; const y = clientY - rect.top;
+
+
+card.style.setProperty('--light-x', `${(x / rect.width) * 100}%`); card.style.setProperty('--light-y', `${(y / rect.height) * 100}%`);
+
+
+card.style.transform = `rotateX((((${y / rect.height}) - 0.5) * -maxTiltDegrees)}deg) rotateY((((${x / rect.width}) - 0.5) * maxTiltDegrees)}deg) scale(1.015)`;
+
+
+}
+
+
+function handleLeave() {
+
+
+card.classList.remove('is-tilting'); card.style.setProperty('--light-x', '50%'); card.style.setProperty('--light-y', '50%');
+
+
+card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+
+
+}
+
+
+card.addEventListener('mousemove', handleMove); card.addEventListener('mouseleave', handleLeave);
+
+
+card.addEventListener('touchmove', handleMove, { passive: true }); card.addEventListener('touchend', handleLeave);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function activateGlobalGyroscope() {
+
+
+if (window.DeviceOrientationEvent) {
+
+
+window.addEventListener('deviceorientation', (e) => {
+
+
+  let gamma = e.gamma; let beta = e.beta;
+
+
+  if (gamma !== null && beta !== null) {
+
+
+    let boundedGamma = Math.max(Math.min(gamma, 15), -15);
+
+
+    let boundedBeta = Math.max(Math.min(beta - 45, 15), -15);
+
+
+    document.querySelectorAll('.student-card').forEach(card => {
+
+
+      if((card.classList.contains('show-animate') || card.classList.contains('pop-search-animation')) && !card.classList.contains('is-tilting')) {
+
+
+        card.style.setProperty('--light-x', `${50 + (boundedGamma * 2.5)}%`);
+
+
+        card.style.setProperty('--light-y', `${50 + (boundedBeta * 2.5)}%`);
+
+
+        card.style.transform = `rotateX(${boundedBeta * -0.4}deg) rotateY(${boundedGamma * 0.4}deg)`;
+
+
+      }
+
+
+    });
+
+
+  }
+
+
+}, true);
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function requestGyroPermission() {
+
+
+if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+
+
+DeviceOrientationEvent.requestPermission().then(state => { if (state === 'granted') { activateGlobalGyroscope(); updateGyroButtonStatus(true); } }).catch(console.error);
+
+
+} else { activateGlobalGyroscope(); }
+
+
+}
+
+
+function updateGyroButtonStatus(isActivated) {
+
+
+const btn = document.getElementById('gyroButton');
+
+
+if(isActivated) { btn.className = "btn-gyro-lock activated"; btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> เอฟเฟกต์ 3D พร้อมใช้งาน`; setTimeout(() => { document.getElementById('gyroWrapper').style.display = 'none'; }, 1500); }
+
+
+}
+
+
+function checkDeviceAndInitGyro() {
+
+
+if (/iPad|iPhone|iPod/.test(navigator.userAgent) && typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') { document.getElementById('gyroWrapper').style.display = 'block'; }
+
+
+else { activateGlobalGyroscope(); }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function applySearch() {
+
+
+let val = document.getElementById('searchId').value.trim();
+
+
+document.getElementById('suggestBox').style.display = 'none';
+
+
+const existingCards = document.querySelectorAll('.student-card');
+
+
+if (existingCards.length > 0) {
+
+
+existingCards.forEach(c => c.classList.add('fade-out-dynamic'));
+
+
+setTimeout(() => { executeSearchRender(val); }, 350);
+
+
+} else { executeSearchRender(val); }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function executeSearchRender(val) {
+
+
+if (val === "") {
+
+
+document.getElementById('cardContainer').innerHTML = `<div class="empty-state"><i class="fa-solid fa-magnifying-glass mb-2"></i><br>พิมพ์เลขที่หรือชื่อของคุณด้านบน เพื่อตรวจสอบยอดเงินค้างชำระ</div>`;
+
+
+return;
+
+
+}
+
+
+let filtered = [fullData[0]];
+
+
+for(let i=1; i<fullData.length; i++) {
+
+
+let currentId = fullData[i][0].toString().trim();
+
+
+let currentName = nameMasterList[currentId] || "";
+
+
+if(currentId === val || currentName.toLowerCase().includes(val.toLowerCase())) {
+
+
+  filtered.push(fullData[i]);
+
+
+}
+
+
+}
+
+
+renderCards(filtered, true);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function showAllCards() {
+
+
+const existingCards = document.querySelectorAll('.student-card');
+
+
+if (existingCards.length > 0) { existingCards.forEach(c => c.classList.add('fade-out-dynamic')); setTimeout(() => { renderCards(fullData, false); }, 350); }
+
+
+else { renderCards(fullData, false); }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function resetSearch() {
+
+
+document.getElementById('searchId').value = "";
+
+
+document.getElementById('suggestBox').style.display = 'none';
+
+
+document.getElementById('searchBtn').classList.remove('has-val');
+
+
+document.getElementById('cardContainer').innerHTML = `<div class="empty-state"><i class="fa-solid fa-magnifying-glass mb-2"></i><br>พิมพ์เลขที่หรือชื่อของคุณด้านบน เพื่อตรวจสอบยอดเงินค้างชำระ</div>`;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener('click', function(e) {
+
+
+if(!e.target.closest('.search-container')) { document.getElementById('suggestBox').style.display = 'none'; }
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+window.onload = () => {
+
+
+google.script.run.withSuccessHandler(names => {
+
+
+names.forEach(n => document.getElementById('sheetSelect').options.add(new Option(n, n)));
+
+
+loadData(); checkDeviceAndInitGyro();
+
+
+}).getSheetNames();
+
+
+};
+
+
+
+
+let cashPaidIds = {};
+let scriptUrl = "";
+let allViolationsData = [];
+
+
+// ฟังก์ชันโหลดข้อมูลใหม่ที่รองรับเงินสด
+function refreshData() {
+ const currentSheet = document.getElementById('sheetSelect').value;
+ if(!currentSheet) return;
+ startLoaderAnimation();
+ google.script.run.withSuccessHandler(res => {
+   fullData = res.values;
+   cashPaidIds = res.cashPaidIds;
+   processColumns(fullData[0]);
+   
+   google.script.run.withSuccessHandler(vData => {
+     allViolationsData = vData;
+     stopLoaderAnimation();
+     const searchVal = document.getElementById('searchId').value.trim();
+     if (searchVal) applySearch();
+     else if (["ค่าห้อง + ค่าปรับ", "รวม"].includes(currentSheet)) renderCards(fullData, false);
+   }).getRuleViolations();
+ }).getSheetDataWithCashStatus(currentSheet);
+}
+
+
+// อัปเดต window.onload
+const oldOnload = window.onload;
+window.onload = () => {
+ google.script.run.withSuccessHandler(url => {
+   scriptUrl = url;
+   document.getElementById('adminLink').href = url + "?page=admin";
+ }).getScriptUrl();
+  google.script.run.withSuccessHandler(names => {
+   names.forEach(n => document.getElementById('sheetSelect').options.add(new Option(n, n)));
+   refreshData();
+   checkDeviceAndInitGyro();
+ }).getSheetNames();
+ 
+
+};
+
+
+</script>
+
+
+</body>
+
+
+</html>
     <style>
         /* CSS เดิมทั้งหมดจากไฟล์ 1.html */
         :root {
