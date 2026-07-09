@@ -1,7 +1,7 @@
 
 // ฟังก์ชันจัดการ API
 async function callApi(action, params = {}) {
-    if (!CONFIG.API_URL || CONFIG.API_URL === 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL') {
+    if (!CONFIG.API_URL || CONFIG.API_URL === 'https://script.google.com/macros/s/AKfycbypqNNQf4-HBcetryp5Gubjq556LuxzYSM_aokjRI-ks9s-sDF2gDONO8mAe6pQg6ey/exec') {
         console.error('กรุณาตั้งค่า API_URL ในไฟล์ config.js');
         return null;
     }
