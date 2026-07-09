@@ -1,0 +1,78 @@
+
+/* MWKCN Premium UI - Full Migration Version */
+:root {
+    --liquid-glass-white: rgba(255, 255, 255, 0.45);
+    --liquid-glass-border: rgba(255, 255, 255, 0.8);
+    --glass-shadow: 0 30px 60px rgba(0, 0, 0, 0.05), 0 10px 20px rgba(0, 0, 0, 0.02);
+    --inner-reflection: inset 0 2px 5px rgba(255, 255, 255, 0.7), inset 0 -1px 2px rgba(255, 255, 255, 0.1);
+    --accent: #007AFF;
+    --fine-red: #ff3b30;
+    --fine-green: #34C759;
+    --bg-gradient: linear-gradient(180deg, #F2F2F7 0%, #E5E5EA 100%);
+    --text-primary: #1C1C1E;
+}
+
+body {
+    background: var(--bg-gradient);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Sarabun", sans-serif;
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding-bottom: 100px;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Intro Overlay */
+#intro-overlay {
+    position: fixed; inset: 0; z-index: 99999;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    animation: fadeOut 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 2.5s;
+    padding: 20px; text-align: center;
+}
+
+.intro-title {
+    color: #fff; font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 900; letter-spacing: 8px;
+    text-transform: uppercase; background: linear-gradient(135deg, #ffffff 30%, #888888 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* Dashboard UI */
+.app-header { background: #000; color: white; padding: 50px 20px 45px; text-align: center; clip-path: ellipse(160% 100% at 50% 0%); margin-bottom: 25px; }
+
+.overview-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.6) 100%);
+    backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+    border: 2px solid var(--liquid-glass-border); border-radius: 24px; padding: 20px; margin: 0 20px 25px;
+    box-shadow: var(--glass-shadow), var(--inner-reflection); text-align: center;
+}
+
+.student-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.58) 100%);
+    backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+    border: 2px solid var(--liquid-glass-border); border-radius: 26px; padding: 25px; margin: 0 20px 20px;
+    box-shadow: var(--glass-shadow), var(--inner-reflection); position: relative; overflow: hidden;
+    opacity: 0; transform: translateY(40px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.student-card.show-animate { opacity: 1; transform: translateY(0); }
+
+.badge-no { background: #007AFF; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
+
+.data-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 2px; border-bottom: 1px solid rgba(0,0,0,0.03); }
+.data-label { color: #8E8E93; font-size: 0.85rem; font-weight: 500; }
+.data-value { font-weight: 600; }
+
+.last-row-warning { background: rgba(255, 59, 48, 0.05); border: 1px solid rgba(255, 59, 48, 0.2); border-radius: 16px; padding: 10px; color: var(--fine-red); }
+.last-row-success { background: rgba(52, 199, 89, 0.05); border: 1px solid rgba(52, 199, 89, 0.2); border-radius: 16px; padding: 10px; color: var(--fine-green); }
+
+/* Maintenance */
+#maintenance-screen { display: none; text-align: center; padding: 100px 20px; background: #000; color: #fff; min-height: 100vh; }
+.highlight { color: var(--accent); font-weight: 800; }
+
+/* Loader */
+#loader {
+    position: fixed; inset: 0; background: rgba(255,255,255,0.8);
+    display: flex; justify-content: center; align-items: center; z-index: 9999;
+}
+
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
