@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>MWKCN Admin Portal - Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+
+ <style>
+   :root {
+     --ios-bg: #f2f2f7;
+     --ios-primary: #000000;
+     --ios-blue: #007aff;
+     --ios-red: #ff3b30;
+     --ios-green: #34c759;
+     --glass-bg: rgba(255, 255, 255, 0.4);
+     --glass-border: rgba(255, 255, 255, 0.5);
+     --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.03), inset 0 1px 1px rgba(255,255,255,0.8);
+     --spring-ease: cubic-bezier(0.25, 1, 0.5, 1);
+   }
+
+
+   body {
+     font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+     background: radial-gradient(circle at 10% 10%, #e8f0fe 0%, #f2f2f7 60%),
+                 radial-gradient(circle at 90% 90%, #ffebeb 0%, #f2f2f7 100%);
+     background-attachment: fixed;
+     color: #1d1d1f;
+     min-height: 100vh;
+     overflow-x: hidden;
+     perspective: 1000px;
+   }
+
+
+   .dynamic-island-wrapper {
+     position: fixed;
+     top: 15px;
+     left: 50%;
+     transform: translateX(-50%);
+     z-index: 5000;
+     pointer-events: none;
+   }
+
+
+   .dynamic-island {
+     background: #000000;
+     color: #ffffff;
+     padding: 10px 22px;
+     border-radius: 30px;
+     font-weight: 600;
+     font-size: 0.9rem;
+     display: flex;
+     align-items: center;
+     gap: 10px;
+     box-shadow: 0 20px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.1);
+     pointer-events: auto;
+     transform-origin: center;
+     min-width: 150px;
+     justify-content: center;
+     transition: background 0.3s;
+   }
+
+
+   .dynamic-island i { font-size: 1rem; }
+
+
+   .glass-panel {
+     background: var(--glass-bg);
+     backdrop-filter: blur(30px) saturate(210%);
+     -webkit-backdrop-filter: blur(30px) saturate(210%);
+     border: 1px solid var(--glass-border);
+     box-shadow: var(--card-shadow);
+     border-radius: 32px;
+     transition: border 0.3s, background 0.3s, box-shadow 0.3s;
+   }
+
+
+   .admin-nav {
+     background: rgba(255, 255, 255, 0.4);
+     backdrop-filter: blur(25px) saturate(180%);
+     -webkit-backdrop-filter: blur(25px) saturate(180%);
+     padding: 18px 24px;
+     position: sticky;
+     top: 0;
+     z-index: 1000;
+     border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+     display: flex;
+     align-items: center;
+   }
+
+
+   .menu-trigger {
+     background: rgba(0, 0, 0, 0.03);
+     border: 1px solid rgba(0,0,0,0.02);
+     font-size: 1.2rem;
+     color: var(--ios-primary);
+     margin-right: 20px;
+     padding: 10px 14px;
+     border-radius: 16px;
+     transition: background 0.2s, transform 0.2s;
+   }
+   .menu-trigger:active { transform: scale(0.9); }
+
+
+   .sidebar-menu {
+     position: fixed;
+     top: 0;
+     left: -340px;
+     width: 320px;
+     height: 100vh;
+     background: rgba(255, 255, 255, 0.65);
+     backdrop-filter: blur(40px) saturate(220%);
+     -webkit-backdrop-filter: blur(40px) saturate(220%);
+     border-right: 1px solid rgba(255,255,255,0.4);
+     z-index: 1040; /* ปรับลดลงเพื่อให้ Modal (1050) อยู่ข้างหน้า */
+     padding: 35px 24px;
+     box-shadow: 25px 0 60px rgba(0,0,0,0.04);
+     overflow-y: auto;
+   }
+   .sidebar-overlay {
+     position: fixed;
+     inset: 0;
+     background: rgba(0,0,0,0.3); /* ปรับให้มืดลงนิดหน่อยเพื่อให้เห็นชัด */
+     backdrop-filter: blur(8px);
+     z-index: 1030; /* ปรับลดลง */
+     display: none;
+     opacity: 0;
+   }
+
+
+   .menu-section-title {
+     font-size: 0.75rem;
+     font-weight: 800;
+     color: #8a8a8e;
+     text-transform: uppercase;
+     letter-spacing: 0.1em;
+     margin: 25px 0 12px 12px;
+   }
+
+
+   .menu-item {
+     display: flex;
+     align-items: center;
+     padding: 14px 18px;
+     color: #2c2c2e;
+     text-decoration: none;
+     border-radius: 18px;
+     font-weight: 600;
+     margin-bottom: 6px;
+     background: rgba(0, 0, 0, 0.02);
+     border: 1px solid rgba(0,0,0,0.01);
+     transition: all 0.25s var(--spring-ease);
+     cursor: pointer;
+   }
+   .menu-item:hover {
+     background: #ffffff;
+     color: var(--ios-blue);
+     transform: translateX(6px) scale(1.02);
+     box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+   }
+   .menu-item i { width: 30px; font-size: 1.2rem; margin-right: 12px; text-align: center; }
+
+
+   .dashboard-container { max-width: 800px; margin: 30px auto; padding: 0 24px; }
+   .stat-card { padding: 26px; margin-bottom: 24px; }
+  
+   .student-item {
+     background: rgba(255, 255, 255, 0.5);
+     border: 1px solid rgba(255, 255, 255, 0.4);
+     border-radius: 26px;
+     padding: 22px 26px;
+     margin-bottom: 16px;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     box-shadow: 0 8px 24px rgba(0,0,0,0.02);
+     transform-origin: center center;
+   }
+
+
+   .btn-action {
+     border-radius: 16px;
+     padding: 12px 22px;
+     font-weight: 700;
+     border: none;
+     font-size: 0.92rem;
+     transition: all 0.2s var(--spring-ease);
+   }
+   .btn-pay {
+     background: var(--ios-primary);
+     color: white;
+     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+   }
+   .btn-pay:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(0,0,0,0.15); }
+   .btn-pay:active { transform: translateY(1px) scale(0.95); }
+  
+   .btn-cancel {
+     background: rgba(255, 59, 48, 0.08);
+     color: var(--ios-red);
+     border: 1px solid rgba(255,59,48,0.05);
+   }
+   .btn-cancel:hover { background: rgba(255, 59, 48, 0.15); }
+
+
+   .search-box { position: relative; margin-bottom: 28px; }
+   .search-box input {
+     background: rgba(0, 0, 0, 0.03);
+     border-radius: 22px;
+     padding: 16px 20px 16px 56px;
+     border: 1.5px solid transparent;
+     font-size: 1.05rem;
+     width: 100%;
+     transition: all 0.3s;
+   }
+   .search-box input:focus {
+     background: white;
+     border-color: var(--ios-blue);
+     box-shadow: 0 10px 30px rgba(0,122,255,0.06);
+     outline: none;
+   }
+   .search-box i { position: absolute; left: 24px; top: 50%; transform: translateY(-50%); color: #8e8e93; font-size: 1.1rem; }
+
+
+   .nav-tabs-premium {
+     border: none;
+     display: flex;
+     gap: 6px;
+     margin-bottom: 28px;
+     background: rgba(120, 120, 128, 0.08);
+     padding: 5px;
+     border-radius: 20px;
+   }
+   .nav-tabs-premium .nav-item { flex: 1; }
+   .nav-tabs-premium .nav-link {
+     width: 100%;
+     border: none;
+     border-radius: 15px;
+     color: #3a3a3c;
+     font-weight: 700;
+     padding: 12px 14px;
+     transition: all 0.25s var(--spring-ease);
+   }
+   .nav-tabs-premium .nav-link.active {
+     background: white;
+     color: var(--ios-primary);
+     box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+   }
+
+
+   #login-screen {
+     position: fixed;
+     inset: 0;
+     background: radial-gradient(circle at 50% 50%, rgba(235, 242, 255, 0.7) 0%, #f2f2f7 100%);
+     z-index: 2000;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     padding: 24px;
+     backdrop-filter: blur(20px);
+   }
+   .login-box { padding: 50px 40px; width: 100%; max-width: 420px; text-align: center; }
+  
+   .loader {
+     display: none;
+     position: fixed;
+     inset: 0;
+     background: rgba(255,255,255,0.2);
+     backdrop-filter: blur(30px);
+     z-index: 6000;
+     justify-content: center;
+     align-items: center;
+   }
+   .loader-content {
+     background: rgba(255, 255, 255, 0.8);
+     padding: 35px 50px;
+     border-radius: 30px;
+     box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+     border: 1px solid rgba(255,255,255,0.6);
+   }
+
+
+   .badge-paid {
+     background: rgba(52, 199, 89, 0.1);
+     color: #1e7e34;
+     padding: 8px 16px;
+     border-radius: 14px;
+     font-weight: 800;
+     font-size: 0.85rem;
+   }
+   select.form-select {
+     background-color: #ffffff;
+     border: 1px solid rgba(0,0,0,0.02);
+     border-radius: 20px;
+     padding: 16px 22px;
+     box-shadow: 0 4px 12px rgba(0,0,0,0.01);
+     font-weight: 600;
+   }
+  
+   .quick-icon {
+     font-size: 1.15rem;
+     color: var(--ios-blue);
+     cursor: pointer;
+     margin-left: 14px;
+     transition: transform 0.2s;
+   }
+   .quick-icon:hover { transform: scale(1.25); }
+
+
+   .custom-modal-content {
+     background: rgba(255, 255, 255, 0.95); /* ปรับให้ทึบขึ้นเพื่อไม่ให้โดนพื้นหลังกลืน */
+     backdrop-filter: blur(40px) saturate(200%);
+     -webkit-backdrop-filter: blur(40px) saturate(200%);
+     border: 1px solid rgba(255,255,255,0.8);
+     border-radius: 36px;
+     box-shadow: 0 30px 70px rgba(0,0,0,0.2);
+   }
+   /* แก้ไขปัญหาหน้าจอดำ (Modal Backdrop) */
+   .modal-backdrop {
+     z-index: 1045 !important;
+   }
+   .modal {
+     z-index: 1050 !important;
+   }
+  
+   /* สไตล์สำหรับรายงานทำผิดกฎ */
+   .violation-red { color: #ff3b30 !important; font-weight: 800 !important; }
+   .violation-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+   .violation-row:last-child { border-bottom: none; }
+  
+   @media print {
+     body * { visibility: hidden; }
+     #print-area, #print-area * { visibility: visible; }
+     #print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; }
+     .no-print { display: none !important; }
+   }
+ </style>
+</head>
+<body>
+
+
+<div class="dynamic-island-wrapper">
+ <div class="dynamic-island" id="dynamicIsland">
+   <i class="fa-solid fa-face-smile" id="islandIcon"></i>
+   <span id="islandText">MWKCN Ready</span>
+ </div>
+</div>
+
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMenu(false)"></div>
+<div class="sidebar-menu" id="sidebarMenu">
+ <div class="d-flex align-items-center mb-4 px-2">
+   <div class="bg-dark text-white rounded-4 p-3 me-3 shadow-sm"><i class="fa-solid fa-cube fa-lg"></i></div>
+   <div>
+     <h5 class="fw-bold mb-0">MWKCN Hub</h5>
+     <span class="text-muted small">Admin Engine</span>
+   </div>
+ </div>
+
+
+ <div class="menu-section-title">ฟีเจอร์การเงินและการคุมบัญชี</div>
+ <div class="menu-item" onclick="showDashboardModal()"><i class="fa-solid fa-chart-pie text-primary"></i>1. Live Dashboard   (ไม่สามารถใช้งานได้)</div>
+ <div class="menu-item" onclick="showExpenseModal()"><i class="fa-solid fa-wallet text-danger"></i>2. บันทึกรายจ่ายห้อง     (ไม่สามารถใช้งานได้)</div>
+ <div class="menu-item" onclick="triggerIslandAlert('💬 ระบบก๊อปคำทวงออโต้พร้อมใช้!', 'success')"><i class="fa-solid fa-comment-dollar text-success"></i>3. ส่งข้อความทวงเงิน Auto</div>
+ <div class="menu-item" onclick="triggerIslandAlert('📸 กดไอคอนคิวอาร์ท้ายชื่อได้เลย!', 'info')"><i class="fa-solid fa-qrcode text-dark"></i>4. Dynamic QR Generator  (ไม่สามารถใช้งานได้)</div>
+
+
+ <div class="menu-section-title">การจัดการห้องและรายงาน</div>
+ <div class="menu-item" onclick="alert('ฟีเจอร์ประกาศข่าวสาร')"><i class="fa-solid fa-bullhorn text-warning"></i>5. ประกาศข่าวสารห้อง   (ไม่สามารถใช้งานได้)</div>
+ <div class="menu-item" onclick="triggerIslandAlert('📊 สรุปรายงานบัญชีเรียบร้อย!', 'success')"><i class="fa-solid fa-file-export text-info"></i>6. ออกรายงานสรุปบัญชี   (ไม่สามารถใช้งานได้)</div>
+ <div class="menu-item" onclick="showTopPayers()"><i class="fa-solid fa-trophy text-warning"></i>7. อันดับคนจ่ายไว   (ไม่สามารถใช้งานได้)</div>
+  <div class="menu-section-title">ระบบระเบียบวินัย</div>
+ <div class="menu-item" onclick="openViolationPage()"><i class="fa-solid fa-user-xmark text-danger"></i>8. บันทึกการทำผิดกฎ </div>
+
+
+ <div class="menu-section-title">ระบบหลังบ้านและแอดมิน</div>
+ <div class="menu-item" onclick="showAdminLogs()"><i class="fa-solid fa-clock-rotate-left text-secondary"></i>9. ประวัติบันทึกแอดมิน   (ไม่สามารถใช้งานได้)</div>
+ <div class="menu-item" onclick="openRosterManager()"><i class="fa-solid fa-user-gear text-dark"></i>10. จัดการรายชื่อนักเรียน   (ไม่สามารถใช้งานได้)</div>
+</div>
+
+
+<div class="modal fade" id="featureModal" tabindex="-1" aria-hidden="true">
+ <div class="modal-dialog modal-dialog-centered modal-lg">
+   <div class="modal-content custom-modal-content text-dark">
+     <div class="modal-header border-0 pb-0">
+       <h5 class="modal-title fw-bold" id="modalTitle">Feature</h5>
+       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+     <div class="modal-body" id="modalBody"></div>
+   </div>
+ </div>
+</div>
+
+
+<div id="login-screen">
+ <div class="login-box glass-panel">
+   <div class="mb-4">
+     <div class="bg-white text-dark d-inline-flex align-items-center justify-content-center mb-3 shadow-sm" style="width: 74px; height: 74px; border-radius: 22px;">
+       <i class="fa-solid fa-user-shield fa-xl"></i>
+     </div>
+     <h3 class="fw-800" style="letter-spacing:-0.03em;">Admin Portal</h3>
+     <p class="text-muted small">ระบบจัดการความปลอดภัยกองทุนห้อง</p>
+   </div>
+   <input type="password" id="adminPass" class="form-control form-control-lg mb-3 text-center border-0 rounded-4 py-3" style="background: rgba(0,0,0,0.04)" placeholder="ใส่รหัสผ่านแอดมิน">
+   <div class="d-grid">
+     <button class="btn btn-dark btn-lg rounded-4 fw-bold py-3" style="background: var(--ios-primary); border:none;" onclick="login()">เข้าสู่ระบบ</button>
+     <button class="btn btn-link text-muted mt-2 text-decoration-none small" onclick="goBack()">กลับหน้าหลัก</button>
+   </div>
+ </div>
+</div>
+
+
+<div id="admin-content" style="display:none; opacity: 0;">
+ <nav class="admin-nav">
+   <button class="menu-trigger" onclick="toggleMenu(true)"><i class="fa-solid fa-bars"></i></button>
+   <div class="d-flex align-items-center me-auto">
+     <i class="fa-solid fa-crown me-2" style="color: #ffb300;"></i>
+     <span class="fw-bold fs-5" style="letter-spacing:-0.02em;">MWKCN Admin</span>
+   </div>
+   <button class="btn btn-light border-0 shadow-sm rounded-pill px-4 py-2 fw-bold small" style="background: white;" onclick="goBack()">
+     <i class="fa-solid fa-house me-2"></i>กลับหน้าหลัก
+   </button>
+ </nav>
+
+
+ <div class="dashboard-container">
+   <div class="stat-card glass-panel">
+     <h6 class="fw-bold text-muted mb-3 small text-uppercase" style="letter-spacing:0.05em;">ตัวเลือกฐานข้อมูลสัปดาห์</h6>
+     <select id="sheetSelect" class="form-select form-select-lg border-0" onchange="loadData(false)"></select>
+   </div>
+
+
+   <ul class="nav nav-tabs-premium" id="adminTabs" role="tablist">
+     <li class="nav-item"><button class="nav-link active" id="tab-unpaid" onclick="switchTab('unpaid')">ยังไม่จ่าย</button></li>
+     <li class="nav-item"><button class="nav-link" id="tab-paid" onclick="switchTab('paid')">จ่ายเงินสดแล้ว</button></li>
+   </ul>
+
+
+   <div class="search-box">
+     <i class="fa-solid fa-magnifying-glass"></i>
+     <input type="text" id="adminSearch" class="form-control shadow-sm" placeholder="ค้นหาด้วยชื่อ หรือ เลขที่..." oninput="renderList()">
+   </div>
+
+
+   <div id="bulk-action-area" class="text-end mb-3" style="display: none;">
+     <button class="btn-action btn-cancel rounded-pill px-4 py-2 shadow-sm" onclick="cancelAllCash()"><i class="fa-solid fa-rotate-left me-2"></i>ยกเลิกรายการเงินสดทั้งหมด</button>
+   </div>
+
+
+   <div id="student-list"></div>
+ </div>
+</div>
+
+
+<div class="loader" id="loader">
+ <div class="loader-content text-center">
+   <div class="spinner-border text-dark mb-3" role="status" style="width: 2.2rem; height: 2.2rem; stroke-width: 3px;"></div>
+   <div class="fw-bold text-muted small">กำลังซิงค์ระบบคลาวด์...</div>
+ </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+ let fullData = [];
+ let cashPaidIds = {};
+ let serverExpenses = [];
+ let adminLogs = [];
+ let scriptUrl = "";
+ let currentTab = 'unpaid';
+ let bsModal;
+  // ข้อมูลรายชื่อนักเรียนสำหรับฟอร์มทำผิดกฎ
+ const nameMasterList = { 
+  "1": "นายอินทัช ฐิติโชติตระกูล", 
+  "2": "น.ส.พัชลา บุญเลิศทรัพย์ทวี", 
+  "3": "นายคุณานนท์ สามัคคีก่อสกุล", 
+  "4": "นายชินกฤต โยธิยา", 
+  "5": "น.ส.จิตรา จือเต๊าะ", 
+  "6": "น.ส.นฤมล เยอะเบียง", 
+  "7": "น.ส.ปานตะวัน เพียงคำ", 
+  "8": "น.ส.ฐิตาพร มาเยอะ", 
+  "9": "น.ส.โนรา โหว่ยคือ", 
+  "10": "น.ส.มยุรี มาเยอะ", 
+  "11": "น.ส.ณัชชา หมื่อแล", 
+  "12": "น.ส.อพิญญา ศรีวิชัย", 
+  "13": "นายอนุรักษ์ แซ่ว่าง", 
+  "14": "น.ส.ดวงกมล มั่นคง", 
+  "15": "น.ส.มรกต ซางสุภาพ", 
+  "16": "น.ส.ติยนันท์ ฦาชา", 
+  "17": "น.ส.กนกภรณ์ โสภณสุนทรเลิศ", 
+  "18": "น.ส.ณนิดา แซ่เติ๋ง", 
+  "19": "นายวิโรจน์ เยอแจะ", 
+  "20": "น.ส.ทองดี เรือนเเก้ว", 
+  "21": "นายทักษ์ดนัย โชคชัยรัตนกุล", 
+  "22": "นวพล สว่างถาวรกุล", 
+  "23": "นายรัชชานนท์ เหวยเหยอกู่", 
+  "24": "นายศุภกิจ แซ่หู่", 
+  "25": "น.ส.กชกร เหลาเหยา", 
+  "26": "น.ส.กัญญาพร อามอ", 
+  "27": "น.ส.ณิชากร อายี", 
+  "28": "น.ส.ธิดารัตน์ ละเชกุ", 
+  "29": "น.ส.นาธาร์ แลเชอ", 
+  "30": "น.ส.เนาวรัตน์ เชอหมื่อ", 
+  "31": "น.ส.เพชรรดา สีไอ้", 
+  "32": "น.ส.ภัคจีรา แซ่เห่อ", 
+  "33": "น.ส.สุปวีณ์ ขันอุละ", 
+  "34": "น.ส.ภัทรมล สหพรสันติสุข", 
+  "35": "น.ส.ธัญญลักษณ์ ทาเกิด", 
+  "36": "น.ส.วราภรณ์ เชอกอง", 
+  "37": "น.ส.ณัชนันท์ คำปวน", 
+  "38": "น.ส.กนกรดา มูเซอ", 
+  "39": "น.ส.นิชดา อาซอ",
+  "40": "นายสุรเชษฐ์ กัลยา"  
+};
+
+ window.onload = () => {
+   bsModal = new bootstrap.Modal(document.getElementById('featureModal'));
+  
+   if (typeof google !== 'undefined') {
+     google.script.run.withSuccessHandler(url => { scriptUrl = url; }).getScriptUrl();
+     google.script.run.withSuccessHandler(names => {
+       const select = document.getElementById('sheetSelect');
+       names.forEach(n => select.options.add(new Option(n, n)));
+     }).getSheetNames();
+   }
+  
+   gsap.from(".login-box", { duration: 1.2, y: 60, opacity: 0, ease: "power4.out" });
+ };
+
+
+ function triggerIslandAlert(message, type = 'success') {
+   const island = document.getElementById('dynamicIsland');
+   const icon = document.getElementById('islandIcon');
+   const text = document.getElementById('islandText');
+
+
+   if (type === 'success') {
+     icon.className = "fa-solid fa-circle-check text-success";
+   } else if (type === 'danger') {
+     icon.className = "fa-solid fa-triangle-exclamation text-danger";
+   } else {
+     icon.className = "fa-solid fa-circle-info text-info";
+   }
+   text.innerText = message;
+
+
+   let tl = gsap.timeline();
+   tl.to(island, { scaleX: 1.2, scaleY: 0.8, duration: 0.15, ease: "power2.out" })
+     .to(island, { scaleX: 0.95, scaleY: 1.1, duration: 0.2, ease: "power2.out" })
+     .to(island, { scaleX: 1, scaleY: 1, paddingLeft: "35px", paddingRight: "35px", backgroundColor: "#1c1c1e", duration: 0.25, ease: "elastic.out(1, 0.6)" })
+     .to(island, { scale: 1, paddingLeft: "22px", paddingRight: "22px", backgroundColor: "#000000", delay: 2.5, duration: 0.4, ease: "power4.inOut" });
+ }
+
+
+ function toggleMenu(open) {
+   const sidebar = document.getElementById('sidebarMenu');
+   const overlay = document.getElementById('sidebarOverlay');
+
+
+   if (open) {
+     overlay.style.display = 'block';
+     gsap.to(overlay, { opacity: 1, duration: 0.3 });
+     gsap.to(sidebar, { left: "0px", duration: 0.5, ease: "power4.out" });
+     gsap.fromTo(".menu-item",
+       { x: -20, opacity: 0 },
+       { x: 0, opacity: 1, stagger: 0.04, duration: 0.4, ease: "power2.out", delay: 0.1 }
+     );
+   } else {
+     gsap.to(overlay, { opacity: 0, duration: 0.3, onComplete: () => overlay.style.display = 'none' });
+     gsap.to(sidebar, { left: "-340px", duration: 0.4, ease: "power3.in" });
+   }
+ }
+
+
+ function login() {
+   const pass = document.getElementById('adminPass').value;
+   showLoader(true);
+  
+   if (typeof google !== 'undefined') {
+     google.script.run.withSuccessHandler(isValid => {
+       showLoader(false);
+       if(isValid) {
+         triggerIslandAlert("🔓 ยินดีต้อนรับ", "success");
+        
+         gsap.to("#login-screen", { opacity: 0, duration: 0.5, onComplete: () => {
+           document.getElementById('login-screen').style.display = 'none';
+           document.getElementById('admin-content').style.display = 'block';
+           gsap.to("#admin-content", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" });
+           loadData(false);
+         }});
+       } else {
+         triggerIslandAlert("❌ รหัสผ่านผิดพลาดค่ะ", "danger");
+       }
+     }).checkAdminAuth(pass);
+   } else {
+     showLoader(false);
+     document.getElementById('login-screen').style.display = 'none';
+     document.getElementById('admin-content').style.display = 'block';
+     gsap.to("#admin-content", { opacity: 1, duration: 0.5 });
+     triggerIslandAlert("🔓 เดโมโหมดผ่านฉลุย", "info");
+   }
+ }
+
+
+ function loadData(isSilent = false) {
+   const sheet = document.getElementById('sheetSelect').value;
+   if(!sheet) return;
+   if (!isSilent) showLoader(true);
+
+
+   if (typeof google !== 'undefined') {
+     google.script.run.withSuccessHandler(res => {
+       if (!isSilent) showLoader(false);
+       fullData = res.values;
+       cashPaidIds = res.cashPaidIds;
+       serverExpenses = res.expenses || [];
+       renderList();
+     }).getSheetDataWithCashStatus(sheet);
+   }
+ }
+
+
+ function switchTab(tab) {
+   currentTab = tab;
+   document.getElementById('tab-unpaid').classList.toggle('active', tab === 'unpaid');
+   document.getElementById('tab-paid').classList.toggle('active', tab === 'paid');
+   renderList();
+ }
+
+
+ function renderList() {
+   const container = document.getElementById('student-list');
+   const searchTerm = document.getElementById('adminSearch').value.toLowerCase();
+   const bulkArea = document.getElementById('bulk-action-area');
+   let html = '';
+   const lastColIdx = fullData[0] ? fullData[0].length - 1 : 0;
+   let countPaid = 0;
+
+
+   for(let i=1; i<fullData.length; i++) {
+     let row = fullData[i];
+     let id = row[0].toString().trim();
+     let name = (row[2] || "") + (row[3] || "") + " " + (row[4] || "");
+     let debt = row[lastColIdx];
+    
+     if (searchTerm && !id.includes(searchTerm) && !name.toLowerCase().includes(searchTerm)) continue;
+     let isPaidInSheet = (parseFloat(debt.toString().replace(/,/g, '')) === 0 || debt === "จ่ายแล้ว" || debt === "ครบแล้ว");
+     let isCashPaid = cashPaidIds[id];
+
+
+     if (currentTab === 'unpaid' && !isPaidInSheet && !isCashPaid) {
+       html += createItem(id, name, debt, 'pay');
+     } else if (currentTab === 'paid' && isCashPaid) {
+       html += createItem(id, name, debt, 'cancel');
+       countPaid++;
+     }
+   }
+  
+   container.innerHTML = html || `<div class="text-center py-5 text-muted"><i class="fa-solid fa-folder-open fa-3xl mb-3 d-block opacity-25"></i>ไม่พบยอดค้างรายงานย่อย</div>`;
+   if (bulkArea) bulkArea.style.display = (currentTab === 'paid' && countPaid > 0) ? 'block' : 'none';
+
+
+   gsap.from(".student-item", {
+     y: 40,
+     opacity: 0,
+     stagger: 0.03,
+     duration: 0.6,
+     ease: "power4.out",
+     clearProps: "all"
+   });
+ }
+
+
+ function createItem(id, name, debt, mode) {
+   let cleanDebt = parseFloat(debt.toString().replace(/,/g, '')) || 0;
+   if (mode === 'pay') {
+     return `
+       <div class="student-item" id="student-${id}">
+         <div>
+           <div class="fw-bold fs-5"><a href="#" onclick="openViolationPage('${id}')" class="text-decoration-none text-dark">${name}</a>
+             <i class="fa-solid fa-comment-dots quick-icon" title="ก๊อปปี้คำทวงเงิน" onclick="copyAlert('${name}', ${cleanDebt})"></i>
+             <i class="fa-solid fa-qrcode quick-icon text-dark" title="เปิด QR Code" onclick="generateQR(${cleanDebt})"></i>
+           </div>
+           <div class="text-muted small">เลขที่ ${id} • <span class="text-danger fw-bold">ค้าง ${debt} บาท</span></div>
+         </div>
+         <button class="btn-action btn-pay shadow-sm" onclick="payCash('${id}', '${name}', '${debt}')"><i class="fa-solid fa-hand-holding-dollar me-2"></i>รับเงินสด</button>
+       </div>
+     `;
+   } else {
+     return `
+       <div class="student-item" id="student-${id}">
+         <div>
+           <div class="fw-bold fs-5"><a href="#" onclick="openViolationPage('${id}')" class="text-decoration-none text-dark">${name}</a> <span class="badge-paid ms-2"><i class="fa-solid fa-check me-1"></i>ชำระแล้ว</span></div>
+           <div class="text-muted small">เลขที่ ${id} • ยอดเงินสดที่รับมา ${debt} บาท</div>
+         </div>
+         <button class="btn-action btn-cancel shadow-sm" onclick="cancelPay('${id}', '${name}')"><i class="fa-solid fa-rotate-left me-2"></i>ยกเลิก</button>
+       </div>
+     `;
+   }
+ }
+
+
+ function payCash(id, name, amount) {
+   gsap.to(`#student-${id}`, { scale: 0.9, opacity: 0, duration: 0.3, ease: "power2.inOut", onComplete: () => {
+     cashPaidIds[id] = true;
+     adminLogs.unshift(`[${new Date().toLocaleTimeString('th-TH')}] รับเงินสดจาก ${name} จำนวน ${amount} บาท`);
+     triggerIslandAlert(`💵 รับเงินสด ${name} เรียบร้อย!`, 'success');
+     renderList();
+   }});
+
+
+   if (typeof google !== 'undefined') {
+     google.script.run.withSuccessHandler(() => { loadData(true); }).confirmCashPayment(document.getElementById('sheetSelect').value, id);
+   }
+ }
+
+
+ function cancelPay(id, name) {
+   gsap.to(`#student-${id}`, { scale: 0.9, opacity: 0, duration: 0.3, ease: "power2.inOut", onComplete: () => {
+     delete cashPaidIds[id];
+     adminLogs.unshift(`[${new Date().toLocaleTimeString('th-TH')}] ยกเลิกเงินสดของ ${name}`);
+     triggerIslandAlert(`↩️ ยกเลิกรายการของ ${name} แล้ว`, 'info');
+     renderList();
+   }});
+
+
+   if (typeof google !== 'undefined') {
+     google.script.run.withSuccessHandler(() => { loadData(true); }).cancelCashPayment(document.getElementById('sheetSelect').value, id);
+   }
+ }
+
+
+ function cancelAllCash() {
+   const sheet = document.getElementById('sheetSelect').value;
+   if(confirm(`⚠️ ยืนยันการ "ยกเลิก" การรับเงินสดทั้งหมดใช่หรือไม่?`)) {
+     showLoader(true);
+     if (typeof google !== 'undefined') {
+       google.script.run.withSuccessHandler(() => {
+         showLoader(false);
+         triggerIslandAlert("🔄 รีเซ็ตล้างยอดเงินสดทั้งหมดแล้วค่ะ", "info");
+         loadData(true);
+       }).cancelAllCashPayments(sheet);
+     }
+   }
+ }
+
+
+ function showDashboardModal() {
+   toggleMenu(false);
+   let totalExpenses = serverExpenses.reduce((sum, exp) => sum + (parseFloat(exp.amount) || 0), 0);
+  
+   document.getElementById('modalTitle').innerText = "📊 Live Dashboard";
+   document.getElementById('modalBody').innerHTML = `
+     <div class="row g-3 text-center my-1">
+       <div class="col-6"><div class="p-4 bg-white rounded-4 shadow-sm border"><h6>รับเงินสดมาแล้ว</h6><h2 class="text-success fw-bold">${Object.keys(cashPaidIds).length} คน</h2></div></div>
+       <div class="col-6"><div class="p-4 bg-white rounded-4 shadow-sm border"><h6>บันทึกจ่ายออก</h6><h2 class="text-danger fw-bold">${totalExpenses} ฿</h2></div></div>
+     </div>
+   `;
+   bsModal.show();
+   gsap.from(".modal-content", { scale: 0.85, opacity: 0, duration: 0.4, ease: "back.out(1.5)" });
+ }
+
+
+ function showExpenseModal() {
+   toggleMenu(false);
+   document.getElementById('modalTitle').innerText = "💵 บันทึกรายจ่ายห้อง";
+   document.getElementById('modalBody').innerHTML = `
+     <div class="p-1">
+       <input type="text" id="expTitle" class="form-control mb-2 rounded-3 p-3 border-0 bg-light" placeholder="รายการ เช่น ค่าไม้กวาด">
+       <input type="number" id="expAmount" class="form-control mb-3 rounded-3 p-3 border-0 bg-light" placeholder="จำนวนเงิน (บาท)">
+       <button class="btn btn-dark w-100 rounded-4 py-3 fw-bold" onclick="submitExpense()">บันทึกรายจ่ายลงระบบคลาวด์</button>
+     </div>
+   `;
+   bsModal.show();
+   gsap.from(".modal-content", { scale: 0.85, opacity: 0, duration: 0.4, ease: "back.out(1.5)" });
+ }
+
+
+ function submitExpense() {
+   const sheet = document.getElementById('sheetSelect').value;
+   const title = document.getElementById('expTitle').value;
+   const amount = document.getElementById('expAmount').value;
+   if(!title || !amount) return triggerIslandAlert("⚠️ กรอกข้อมูลไม่ครบถ้วนค่ะ!", "danger");
+  
+   if (typeof google !== 'undefined') {
+     google.script.run.withSuccessHandler(() => {
+       triggerIslandAlert("✅ บันทึกรายจ่ายสำเร็จสะสมลงชีต!", "success");
+       bsModal.hide();
+       loadData(true);
+     }).addExpense(sheet, title, amount);
+   }
+ }
+
+
+ function copyAlert(name, debt) {
+   let text = `📢 ประกาศจากกองทุนห้อง: แจ้งเตือนคุณ ${name} มียอดค้างชำระอยู่จำนวน ${debt} บาท รบกวนชำระเงินให้เรียบร้อยภายในวันนี้นะคะ`;
+   navigator.clipboard.writeText(text).then(() => {
+     triggerIslandAlert("💬 ก๊อปคำทวงลงคลิปบอร์ดแล้ว!", "success");
+   });
+ }
+
+
+ function generateQR(amount) {
+   const promptPayID = "0908870278";
+   document.getElementById('modalTitle').innerText = "🔗 Dynamic QR Generator";
+   document.getElementById('modalBody').innerHTML = `
+     <div class="text-center py-2">
+       <p class="small text-muted mb-3">สแกนจ่ายยอดค้างชำระเข้าพร้อมเพย์ห้อง</p>
+       <img src="https://api.qrserver.com/v1/create-qr-code/?size=190x190&data=${encodeURIComponent('https://promptpay.io/' + promptPayID + '/' + amount)}" class="img-fluid rounded-4 mb-3 shadow">
+       <h3 class="fw-bold text-dark">${amount} บาท</h3>
+     </div>
+   `;
+   bsModal.show();
+   gsap.from(".modal-content", { scale: 0.85, opacity: 0, duration: 0.4, ease: "back.out(1.5)" });
+ }
+
+
+ function showTopPayers() {
+   toggleMenu(false);
+   document.getElementById('modalTitle').innerText = "🏆 อันดับคนจ่ายไว (Top Payers)";
+   document.getElementById('modalBody').innerHTML = `
+     <ol class="list-group list-group-numbered border-0 gap-2 my-2">
+       <li class="list-group-item d-flex justify-content-between align-items-start border rounded-4 p-3 bg-white shadow-sm">⚡️ กลุ่มเลขที่ 01 - 10 <span class="badge bg-success rounded-pill p-2 px-3">แชมป์จ่ายไว</span></li>
+       <li class="list-group-item d-flex justify-content-between align-items-start border rounded-4 p-3 bg-white shadow-sm">🔥 กลุ่มเลขที่ 11 - 20 <span class="badge bg-warning text-dark rounded-pill p-2 px-3">รองแชมป์</span></li>
+     </ol>
+   `;
+   bsModal.show();
+   gsap.from(".list-group-item", { x: 30, opacity: 0, stagger: 0.1, duration: 0.4, ease: "power3.out" });
+ }
+
+
+ function showAdminLogs() {
+   toggleMenu(false);
+   document.getElementById('modalTitle').innerText = "⏰ ประวัติเซสชั่นแอดมิน";
+   let logHtml = adminLogs.map(log => `<div class="small py-2 border-bottom text-muted fw-medium"><i class="fa-regular fa-clock me-2 text-primary"></i>${log}</div>`).join('') || "ยังไม่มีประวัติการทำรายการเงินสดในหน้านี้";
+   document.getElementById('modalBody').innerHTML = `<div style="max-height:280px; overflow-y:auto; padding: 5px;">${logHtml}</div>`;
+   bsModal.show();
+ }
+
+
+ function openRosterManager() {
+   toggleMenu(false);
+   triggerIslandAlert("🔓 เปิดลิ้งค์ทางเข้า Google Sheets แล้ว!", "info");
+   alert("แกสามารถก้าวเข้าไปจัดการเพิ่ม/ลดรายชื่อเพื่อนใน Google Sheets ได้เลยโดยตรงค่ะหลังบ้านซิงค์ออโต้!");
+ }
+
+
+ // ==========================================================
+ // ฟีเจอร์ที่ 10: ระบบบันทึกการทำผิดกฎ (แบบเปิดหน้าใหม่)
+ // ==========================================================
+ function openViolationPage(studentId = '') {
+   toggleMenu(false);
+   if (scriptUrl) {
+     const targetUrl = scriptUrl + "?page=violation" + (studentId ? "&id=" + studentId : "");
+     window.open(targetUrl, '_blank');
+     triggerIslandAlert("🚀 กำลังเปิดหน้าบันทึกทำผิดกฎในแท็บใหม่...", "info");
+   } else {
+     alert("ไม่พบ URL ของสคริปต์ กรุณารีเฟรชหน้าจออีกครั้งค่ะ");
+   }
+ }
+
+
+ function showLoader(show) {
+   const loader = document.getElementById('loader');
+   if (show) {
+     loader.style.display = 'flex';
+     gsap.fromTo(".loader-content", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.2)" });
+   } else {
+     gsap.to(".loader-content", { scale: 0.8, opacity: 0, duration: 0.2, onComplete: () => loader.style.display = 'none' });
+   }
+ }
+
+
+ function goBack() {
+   if(scriptUrl) window.top.location.href = scriptUrl;
+   else alert("ระบบจำลองการย้อนกลับหน้าหลัก");
+ }
+</script>
+</body>
+</html>
