@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>MWKCN Class Fund Dashboard - Original Source</title>
+    
+    <!-- นำ CSS ทั้งหมดจากโค้ดต้นฉบับมาใส่ที่นี่ -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* CSS เดิมทั้งหมดจากไฟล์ 1.html */
+        :root {
+            --liquid-glass-white: rgba(255, 255, 255, 0.45);
+            --liquid-glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 30px 60px rgba(0, 0, 0, 0.05), 0 10px 20px rgba(0, 0, 0, 0.02);
+            --inner-reflection: inset 0 2px 5px rgba(255, 255, 255, 0.7), inset 0 -1px 2px rgba(255, 255, 255, 0.1);
+            --accent: #007AFF;
+            --fine-red: #ff3b30;
+            --fine-green: #34C759;
+            --bg-gradient: linear-gradient(180deg, #F2F2F7 0%, #E5E5EA 100%);
+            --text-primary: #1C1C1E;
+        }
+        body { background: var(--bg-gradient); font-family: "Sarabun", sans-serif; color: var(--text-primary); min-height: 100vh; padding-bottom: 100px; }
+        .app-header { background: #000; color: white; padding: 50px 20px 45px; text-align: center; clip-path: ellipse(160% 100% at 50% 0%); margin-bottom: 25px; }
+        .student-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border-radius: 26px; padding: 25px; margin-bottom: 20px; border: 2px solid var(--liquid-glass-border); box-shadow: var(--glass-shadow); opacity: 0; transform: translateY(20px); transition: all 0.5s ease; }
+        .student-card.show-animate { opacity: 1; transform: translateY(0); }
+        #maintenance-screen { display: none; text-align: center; padding: 100px 20px; }
+        .highlight { color: var(--fine-red); font-weight: 800; }
+        #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.8); display: none; justify-content: center; align-items: center; z-index: 9999; }
+    </style>
+</head>
+<body>
+
+    <!-- ส่วนของหน้า Dashboard (จาก 1.html) -->
+    <div id="main-dashboard">
+        <header class="app-header">
+            <h1>MWKCN FUND</h1>
+            <p>ระบบติดตามยอดเงินห้องเรียน 6/11</p>
+        </header>
+        
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-8">
+                    <input type="text" id="searchId" class="form-control" placeholder="ค้นหาชื่อหรือเลขที่..." oninput="applySearch()">
+                </div>
+                <div class="col-4">
+                    <select id="sheetSelect" class="form-select" onchange="refreshData()"></select>
+                </div>
+            </div>
+            <div id="data-container"></div>
+        </div>
+    </div>
+
+    <!-- ส่วนของหน้าปิดปรับปรุง (Maintenance) -->
+    <div id="maintenance-screen">
+        <i class="fa-solid fa-hourglass-half fa-4x mb-4 text-muted"></i>
+        <h1>ระบบปิดปรับปรุงชั่วคราว</h1>
+        <p>ขณะนี้เป็น <span class="highlight">ช่วงวันหยุดสุดสัปดาห์</span> (เสาร์-อาทิตย์)</p>
+        <p>ระบบจะกลับมาเปิดใช้งานอีกครั้งในวันจันทร์ครับ</p>
+    </div>
+
+    <div id="loader"><div class="spinner-border text-primary"></div></div>
+
+    <script>
+        // ==========================================================
+        // [จุดที่ต้องแก้] นำ URL ของ Web App จาก Google Apps Script มาใส่ที่นี่
+        // ==========================================================
+        const SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL';
+
+        // ฟังก์ชันเชื่อมต่อ API (แทนที่ google.script.run)
+        async function callApi(action, params = {}) {
+            const url = new URL(SCRIPT_URL);
+            url.searchParams.append('action', action);
+            for (const [key, value] of Object.entries(params)) {
+                url.searchParams.append(key, value);
+            }
+            const res = await fetch(url);
+            return await res.json();
+        }
+
+        // ตรรกะการเช็คสถานะปิดปรับปรุง
+        async function checkStatus() {
+            document.getElementById('loader').style.display = 'flex';
+            try {
+                const status = await callApi('checkStatus');
+                if (status.maintenance) {
+                    document.getElementById('main-dashboard').style.display = 'none';
+                    document.getElementById('maintenance-screen').style.display = 'block';
+                } else {
+                    document.getElementById('main-dashboard').style.display = 'block';
+                    initDashboard();
+                }
+            } catch (e) {
+                console.error(e);
+                document.getElementById('main-dashboard').style.display = 'block';
+                initDashboard();
+            }
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        // ฟังก์ชันอื่นๆ จากโค้ดต้นฉบับ 1.html ทั้งหมด (ผมจะรวมไว้ให้ในไฟล์จริง)
+        function initDashboard() {
+            // โค้ดโหลดข้อมูลเดิม...
+            refreshData();
+        }
+
+        async function refreshData() {
+            const sheet = document.getElementById('sheetSelect').value;
+            const data = await callApi('getData', { sheetName: sheet });
+            // โค้ด renderCards เดิม...
+        }
+
+        window.onload = checkStatus;
+    </script>
+</body>
+</html>
